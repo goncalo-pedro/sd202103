@@ -1,8 +1,6 @@
 from ctypes import Union
-
 import pygame
 from pygame.surface import SurfaceType
-
 from stubs.tetris_game import TetrisGame
 from ui import play_width, play_height
 from ui.Player import Player

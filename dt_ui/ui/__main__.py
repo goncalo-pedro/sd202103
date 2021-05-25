@@ -9,11 +9,7 @@ import pygame
 
 done = False
 
-# screen resolution
-
 pygame.font.init()
-
-# VARIÁVEIS GLOBAIS
 
 widgets = []
 

@@ -1,5 +1,4 @@
 import socket
-from collections import Sized
 
 from game import Piece
 from sockets.sockets_mod import Socket
