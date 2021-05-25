@@ -3,7 +3,7 @@ import pygame as pg
 
 class Button(object):
     '''
-    Example can found in run_button.py.py
+    Exemplo aquirido do GitHub, utilizado para representar o botão "JOGAR" que permite ao jogador dar inicio à partida.
 
     '''
 

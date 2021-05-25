@@ -4,7 +4,8 @@ import string
 
 class TextBox(object):
     '''
-    Example can found in run_textbox.py.py
+
+    Exemplo adquirido do GitHub para criar a caixa de introdução de texto para que o jogador possa inserir o seu nome.
 
     '''
 

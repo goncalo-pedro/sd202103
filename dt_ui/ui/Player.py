@@ -17,8 +17,9 @@ class Player:
     def __init__(self, name, game: TetrisGame):
         """
 
-        :param name:
-        :param game:
+        :param name: str
+        :param game: object
+
         """
         self._game = game
         self._name = name
@@ -28,71 +29,71 @@ class Player:
 
 # adicionados métodos para os INPUTS do jogo
 
-    def move_left(self):
+    def move_left(self) -> None:
         """
 
-        :return:
+        :return: returns nothing
         """
         print(self._game.move_left())
 
-    def move_right(self):
+    def move_right(self) -> None:
         """
 
-        :return:
+        :return: returns nothing
         """
         print(self._game.move_right())
 
-    def move_down(self):
+    def move_down(self) -> None:
         """
 
-        :return:
+        :return: returns nothing
         """
         print(self._game.move_down())
 
-    def move_up(self):
+    def move_up(self) -> None:
         """
 
-        :return:
+        :return: returns nothing
         """
         print(self._game.move_up())
 
-    def exit(self):
+    def exit(self) -> None:
         """
 
-        :return:
+        :return: returns nothing
         """
         self._game.exit()
 
-    def run(self):
+    def run(self) -> None:
         """
 
-        :return:
+        :return: returns nothing
         """
         self.move_left()
         self.exit()
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
 
-        :return:
+        :return: str
         """
         return self._name
 
     @property
-    def points(self):
+    def points(self) -> int:
         """
 
-        :return:
+        :return: int
         """
         return self._points
 
     @points.setter
-    def points(self, points):
+    def points(self, points) -> None:
         """
 
-        :param points:
-        :return:
+        :param points: int
+        :return: int
         """
         self._points += points
 
@@ -102,19 +103,19 @@ class Player:
 
     # set player points
 
-    def setPoints(self):
+    def setPoints(self) -> None:
         """
 
-        :return:
+        :return: returns nothing
         """
         self.points += 1
 
     # reset pontuaçoes no fim do jogo
 
-    def resetPoints(self):
+    def resetPoints(self) -> None:
         """
 
-        :return:
+        :return: returns nothing
         """
         self.points = 0
 

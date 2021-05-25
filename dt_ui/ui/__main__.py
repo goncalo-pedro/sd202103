@@ -31,31 +31,33 @@ entry_settings = {
 }
 
 
-def textbox_callback(id, final):
+def textbox_callback(id, final) -> None:
     """
 
-    :param id:
-    :param final:
-    :return:
+    :param id: ?
+    :param final: ?
+    :return: returns nothing
     """
     print('enter pressed, textbox contains {}'.format(final))
 
 
-def alternative_callback(id, final):
+def alternative_callback(id, final) -> None:
     """
 
-    :param id:
-    :param final:
-    :return:
+    :param id: ?
+    :param final: ?
+    :return: returns nothing
     """
     print('alternative textbox contains {}'.format(final))
 
 
-def button_callback():
+def button_callback() -> None:
     """
 
-    :return:
+    :return: returns nothing
+
     """
+
     global done
     done = True
 
@@ -63,7 +65,9 @@ def button_callback():
 def main_menu():
     """
 
-    :return:
+    Main da parte do cliente, corre o UI.
+
+
     """
 
     game = TetrisGame(ui.SERVER_ADDRESS, stubs.PORT)  # STUB
