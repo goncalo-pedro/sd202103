@@ -31,19 +31,39 @@ entry_settings = {
 
 
 def textbox_callback(id, final):
+    """
+
+    :param id:
+    :param final:
+    :return:
+    """
     print('enter pressed, textbox contains {}'.format(final))
 
 
 def alternative_callback(id, final):
+    """
+
+    :param id:
+    :param final:
+    :return:
+    """
     print('alternative textbox contains {}'.format(final))
 
 
 def button_callback():
+    """
+
+    :return:
+    """
     global done
     done = True
 
 
 def main_menu():
+    """
+
+    :return:
+    """
 
     game = TetrisGame(ui.SERVER_ADDRESS, stubs.PORT)  # STUB
     # see all settings help(pygooey.TextBox.__init__)

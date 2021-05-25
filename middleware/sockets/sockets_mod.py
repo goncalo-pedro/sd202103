@@ -6,18 +6,37 @@ import sockets
 
 
 class Socket:
+    """
+
+    """
     def __init__(self):
+        """
+
+        """
         self._current_connection = None
 
     @property
     def current_connection(self):
+        """
+
+        :return:
+        """
         return self._current_connection
 
     @current_connection.setter
     def current_connection(self, value):
+        """
+
+        :param value:
+        :return:
+        """
         self._current_connection = value
 
     def accept(self) -> Union['Socket', None]:
+        """
+
+        :return:
+        """
         try:
             client_connection, _ = self._current_connection.accept()
             new_socket = Socket()
@@ -28,47 +47,101 @@ class Socket:
 
     @property
     def peer_add(self):
+        """
+
+        :return:
+        """
         return self._current_connection.getpeername()
 
     def receive_int(self, n_bytes: int) -> int:
+        """
+
+        :param n_bytes:
+        :return:
+        """
         data = self._current_connection.recv(n_bytes)
         return int.from_bytes(data, byteorder='big', signed=True)
 
     def send_int(self, value: int, n_bytes: int) -> None:
+        """
+
+        :param value:
+        :param n_bytes:
+        :return:
+        """
         self._current_connection.send(value.to_bytes(n_bytes, byteorder='big', signed=True))
 
     def receive_str(self) -> str:
+        """
+
+        :return:
+        """
         n_bytes: int = self.receive_int(sockets.INT_SIZE)
         received: bytes = self._current_connection.recv(n_bytes)
         return received.decode()
 
     def send_str(self, value: str) -> None:
+        """
+
+        :param value:
+        :return:
+        """
         to_send: bytes = value.encode()
         self.send_int(len(to_send), sockets.INT_SIZE)
         self._current_connection.send(to_send)
 
     def send_obj(self, obj):
+        """
+
+        :param obj:
+        :return:
+        """
         data: bytes = pickle.dumps(obj)
         self.send_int(len(data), sockets.INT_SIZE)
         self._current_connection.send(data)
 
     def receive_obj(self):
+        """
+
+        :return:
+        """
         n_bytes: int = self.receive_int(sockets.INT_SIZE)
         received: bytes = self._current_connection.recv(n_bytes)
         return pickle.loads(received)
 
     def __enter__(self):
+        """
+
+        :return:
+        """
         return self
 
     def __exit__(self, exc_type, exc_value, exc_tb):
+        """
+
+        :param exc_type:
+        :param exc_value:
+        :param exc_tb:
+        :return:
+        """
         self.close()
 
     def close(self):
+        """
+
+        :return:
+        """
         if self._current_connection is not None:
             self._current_connection.close()
 
     @staticmethod
     def create_server_socket(port: int, timeout: int = None) -> 'Socket':
+        """
+
+        :param port:
+        :param timeout:
+        :return:
+        """
         new_socket: socket = socket()
         new_socket.bind(('', port))
         new_socket.listen(1)
@@ -80,6 +153,12 @@ class Socket:
 
     @staticmethod
     def create_client_socket(host: str, port: int) -> 'Socket':
+        """
+
+        :param host:
+        :param port:
+        :return:
+        """
         new_socket: socket = socket()
         new_socket.connect((host, port))
 

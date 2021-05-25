@@ -1,20 +1,39 @@
 class Tabuleiro:
+    """
+
+    """
 
     def __init__(self):
+        """
+
+        """
         self._locked_positions = {}
         self._shapes = []
         self._grid = [[(0, 0, 0) for x in range(10)] for x in range(20)]
 
     @property
     def locked_positions(self):
+        """
+
+        :return:
+        """
         return self._locked_positions
 
     @locked_positions.setter
     def locked_positions(self, locked_positions):
+        """
+
+        :param locked_positions:
+        :return:
+        """
         print(locked_positions)
         self._locked_positions = locked_positions
 
     def create_grid(self):
+        """
+
+        :return:
+        """
         grid = [[(0, 0, 0) for x in range(10)] for x in range(20)]
 
         for i in range(len(grid)):
@@ -26,6 +45,11 @@ class Tabuleiro:
         return grid
 
     def clear_rows(self, grid):
+        """
+
+        :param grid:
+        :return:
+        """
         # need to see if row is clear the shift every other row above down one
         inc = 0
         self._grid = grid
@@ -50,6 +74,11 @@ class Tabuleiro:
         return inc
 
     def valid_space(self, shape):
+        """
+
+        :param shape:
+        :return:
+        """
         accepted_positions = [[(j, i) for j in range(10) if self._grid[i][j] == (0, 0, 0)] for i in range(20)]
         accepted_positions = [j for sub in accepted_positions for j in sub]
         formatted = self.convert_shape_format(shape)
@@ -62,6 +91,11 @@ class Tabuleiro:
 
     @staticmethod
     def convert_shape_format(shape):
+        """
+
+        :param shape:
+        :return:
+        """
         positions = []
         format_shape = shape.shape[shape.rotation % len(shape.shape)]
 

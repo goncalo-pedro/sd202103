@@ -6,62 +6,126 @@ import game
 
 
 class TetrisServer(Socket):
+    """
+
+    """
     def __init__(self, port: int, jogo: game.Jogo):
+        """
+
+        :param port:
+        :param jogo:
+        """
         super().__init__()
         self._port = port
         self._server = jogo
 
     def left(self) -> None:
+        """
+
+        :return:
+        """
         print("dentro do left")
         input = self._server.left()
         self.send_str(input)
 
     def right(self) -> None:
+        """
+
+        :return:
+        """
         print("dentro do right")
         input = self._server.right()
         self.send_int(input, 10)
 
     def down(self) -> None:
+        """
+
+        :return:
+        """
         print("dentro do down")
         input = self._server.down()
         self.send_int(input, 10)
 
     def up(self) -> None:
+        """
+
+        :return:
+        """
         input = self._server.up()
         self.send_int(input, 10)
 
     def get_shape(self):
+        """
+
+        :return:
+        """
         shape = self._server.get_shape()
         self.send_obj(shape)
 
     def create_grid(self):
+        """
+
+        :return:
+        """
         grid = self._server.create_grid()
         self.send_obj(grid)
 
     def get_locked_positions(self):
+        """
+
+        :return:
+        """
         locked_positions = self._server.get_locked_positions()
         self.send_obj(locked_positions)
 
     def set_locked_positions(self, locked_positions):
+        """
+
+        :param locked_positions:
+        :return:
+        """
         self._server.set_locked_positions(locked_positions)
 
     def valid_space(self, piece):
+        """
+
+        :param piece:
+        :return:
+        """
         valid_space = self._server.valid_space(piece)
         self.send_obj(valid_space)
 
     def clear_rows(self, grid):
+        """
+
+        :param grid:
+        :return:
+        """
         rows_cleared = self._server.clear_rows(grid)
         self.send_int(rows_cleared, 2)
 
     def convert_shape_format(self, current_piece):
+        """
+
+        :param current_piece:
+        :return:
+        """
         shape = self._server.convert_shape_format(current_piece)
         self.send_obj(shape)
 
     def check_lost(self):
+        """
+
+        :return:
+        """
         lost = self._server.check_lost()
         self.send_int(lost, 2)
 
     def run(self) -> None:
+        """
+
+        :return:
+        """
         current_socket = socket.socket()
         current_socket.bind(('', self._port))
         current_socket.listen(1)
@@ -79,6 +143,10 @@ class TetrisServer(Socket):
         print("server stopped")
 
     def dispatch_request(self) -> (bool, bool):
+        """
+
+        :return:
+        """
         request_type = self.receive_str()
         last_request = False
         keep_running = True

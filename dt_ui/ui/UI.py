@@ -115,7 +115,17 @@ T = [['.....',
 
 
 class UI:
+    """
+
+    """
     def __init__(self, window, top_left_x, top_left_y, game):
+        """
+
+        :param window:
+        :param top_left_x:
+        :param top_left_y:
+        :param game:
+        """
         self._player = None
         self._window = window
         self.s_width = 800
@@ -126,30 +136,62 @@ class UI:
 
     @property
     def window(self):
+        """
+
+        :return:
+        """
         return self._window
 
     @property
     def top_left_x(self):
+        """
+
+        :return:
+        """
         return self._top_left_y
 
     @property
     def top_left_y(self):
+        """
+
+        :return:
+        """
         return self._top_left_y
 
     @property
     def player(self):
+        """
+
+        :return:
+        """
         return self._player
 
     @player.setter
     def player(self, player):
+        """
+
+        :param player:
+        :return:
+        """
         print("dwqdqwdqwd")
         print(player)
         self._player = player
 
     def fill(self):
+        """
+
+        :return:
+        """
         self.window.fill((0, 0, 0))
 
     def draw_text_middle(self, text, size, color):
+        """
+
+        :param text:
+        :param size:
+        :param color:
+        :return:
+        """
 
         font = pygame.font.SysFont('comicsans', size, bold=True)
         label = font.render(text, 1, color)
@@ -159,6 +201,12 @@ class UI:
             self.top_left_y + play_height / 2 - label.get_height() / 2))
 
     def draw_grid(self, row, col):
+        """
+
+        :param row:
+        :param col:
+        :return:
+        """
         sx = self.top_left_x + 150
         sy = self.top_left_y
         for i in range(row):
@@ -169,6 +217,10 @@ class UI:
                                  (sx + j * 30, sy + play_height))  # vertical lines
 
     def update_score(self):
+        """
+
+        :return:
+        """
         font = pygame.font.SysFont('comicsans', 30)
         font2 = pygame.font.SysFont('comcsans', 20)
 
@@ -183,6 +235,11 @@ class UI:
 
 
     def draw_next_shape(self, shape):
+        """
+
+        :param shape:
+        :return:
+        """
         font = pygame.font.SysFont('comicsans', 30)
         label = font.render('Next Shape', 1, (255, 255, 255))
 
@@ -199,6 +256,11 @@ class UI:
         self.window.blit(label, (sx + 10, sy - 30))
 
     def draw_window(self, grid):
+        """
+
+        :param grid:
+        :return:
+        """
         self.window.fill((0, 0, 0))
         # Tetris Title
         font = pygame.font.SysFont('comicsans', 60)
@@ -215,6 +277,13 @@ class UI:
         pygame.draw.rect(self.window, (255, 0, 0), (self.top_left_x + 150, self.top_left_y, play_width, play_height), 5)
 
     def draw_title(self, text, size, color):
+        """
+
+        :param text:
+        :param size:
+        :param color:
+        :return:
+        """
         font = pygame.font.SysFont('comicsans', size, bold=True)
         label = font.render(text, 1, color)
 
@@ -223,6 +292,10 @@ class UI:
             self._top_left_y - 100 + play_height / 2 - label.get_height() / 2))
 
     def run(self):
+        """
+
+        :return:
+        """
 
         change_piece = False
         run = True
