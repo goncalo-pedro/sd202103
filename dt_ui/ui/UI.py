@@ -122,10 +122,10 @@ class UI:
     def __init__(self, window: object, top_left_x: int, top_left_y: int, game: object):
         """
 
-        :param window:
-        :param top_left_x:
-        :param top_left_y:
-        :param game: object
+        :param window: janela de jogo
+        :param top_left_x: posicao X superior esquerda da janela
+        :param top_left_y: posicao Y superior esquerda da janela
+        :param game: objeto to tipo Jogo
         :return: returns nothing
         :rtype None
 
@@ -175,7 +175,7 @@ class UI:
     def player(self, player) -> None:
         """
 
-        :param player: Object
+        :param player: objeto do tipo Jogador, representa o Jogador.
         :return: Object
         """
         print(player)
@@ -195,9 +195,9 @@ class UI:
 
         Método utilizado para escrever texto num sítio do ecrã previamente definido
 
-        :param text: string
-        :param size: int
-        :param color: tuple
+        :param text: string de texto destinada a ser escrita no ecrã
+        :param size: inteiro referente ao tamanho de letra
+        :param color: tuplo referente à cor a utilizar (R,G,B)
         :return: returns nothing
         """
 
@@ -213,8 +213,8 @@ class UI:
 
         Método utilizado para desenhar a "grelha" do tabuleiro, representando os espaços que cada bloco poderá preencher
 
-        :param row: int
-        :param col: int
+        :param row: inteiro relativo a cada linha da grid
+        :param col: inteiro relativo a cada coluna da grid
         :return: returns nothing
         """
         sx = self.top_left_x + 150
@@ -252,7 +252,7 @@ class UI:
 
         Método utilizado para mostrar no lado direito do jogo qual a próxima peça a ser gerada.
 
-        :param shape: [][]
+        :param shape: matrix 2D referente à forma de uma peça
 
         :return: returns nothing
 
@@ -278,7 +278,7 @@ class UI:
 
         Método utilizado para desenhar a janela principal do jogo.
 
-        :param grid: [[]]
+        :param grid: matrix 2D relativa à grid de jogo
         :return: returns nothing
         :rtype: None
 
@@ -305,9 +305,9 @@ class UI:
 
         Método utilizado para desenhar o título "DISTRIBUTED TETRIS" no ecrã de jogo.
 
-        :param text: str
-        :param size: int
-        :param color: tuple
+        :param text: string relativa ao texto a desenhar como titulo no ecra de jogo
+        :param size: inteiro relativo ao tamanho de letra a utilizar
+        :param color: tuplo relativo à cor (R,G,B) a utilizar
         :return: returns nothing
         :rtype: None
 

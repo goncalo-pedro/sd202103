@@ -34,8 +34,8 @@ entry_settings = {
 def textbox_callback(id, final) -> None:
     """
 
-    :param id: ?
-    :param final: ?
+    :param id: id do objeto textbox
+    :param final: texto do objeto textbox
     :return: returns nothing
     """
     print('enter pressed, textbox contains {}'.format(final))
@@ -44,8 +44,8 @@ def textbox_callback(id, final) -> None:
 def alternative_callback(id, final) -> None:
     """
 
-    :param id: ?
-    :param final: ?
+    :param id: id do objeto textbox
+    :param final: texto do objeto textbox
     :return: returns nothing
     """
     print('alternative textbox contains {}'.format(final))
