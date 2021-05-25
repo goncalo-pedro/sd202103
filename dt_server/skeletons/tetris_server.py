@@ -1,4 +1,6 @@
 import socket
+
+from game import Piece
 from sockets.sockets_mod import Socket
 from game.Jogo import Jogo
 
@@ -7,116 +9,104 @@ import game
 
 class TetrisServer(Socket):
     """
-
+        TetrisServer é a classe responsável pela função de stub,
+        recebe e responde a pedidos feito pelo cliente
     """
     def __init__(self, port: int, jogo: game.Jogo):
         """
+            Constrói um objeto "TetrisServer"
 
-        :param port:
-        :param jogo:
+        :param port: int
+        :param jogo: Jogo
         """
         super().__init__()
         self._port = port
         self._server = jogo
 
-    def left(self) -> None:
+    def get_shape(self) -> None:
         """
+        Comunica ao jogo que pretende obter o formato da peça
+        Envia a resposta do jogo para o stub via middleware, em formato de objeto.
 
-        :return:
-        """
-        print("dentro do left")
-        input = self._server.left()
-        self.send_str(input)
-
-    def right(self) -> None:
-        """
-
-        :return:
-        """
-        print("dentro do right")
-        input = self._server.right()
-        self.send_int(input, 10)
-
-    def down(self) -> None:
-        """
-
-        :return:
-        """
-        print("dentro do down")
-        input = self._server.down()
-        self.send_int(input, 10)
-
-    def up(self) -> None:
-        """
-
-        :return:
-        """
-        input = self._server.up()
-        self.send_int(input, 10)
-
-    def get_shape(self):
-        """
-
-        :return:
+        :return: returns nothing
         """
         shape = self._server.get_shape()
         self.send_obj(shape)
 
     def create_grid(self):
         """
+        Comunica ao jogo que pretende obter o formato da grelha do jogo
+        com as devidas posições ocupadas.
+        Envia a resposta do jogo para o stub via middleware, em formato de objeto.
 
-        :return:
+        :return: returns nothing
         """
         grid = self._server.create_grid()
         self.send_obj(grid)
 
     def get_locked_positions(self):
         """
+        Comunica ao jogo que pretende obter o map de posições ocupadas.
+        Envia a resposta do jogo para o stub via middleware, em formato de objeto.
 
-        :return:
+        :return: returns nothing
         """
         locked_positions = self._server.get_locked_positions()
         self.send_obj(locked_positions)
 
-    def set_locked_positions(self, locked_positions):
+    def set_locked_positions(self, locked_positions: {}):
         """
+        Comunica ao jogo que pretende alterar as posições ocupadas pelas peças.
 
         :param locked_positions:
-        :return:
+        :return: returns nothings
         """
         self._server.set_locked_positions(locked_positions)
 
-    def valid_space(self, piece):
+    def valid_space(self, piece: [[]]) -> None:
         """
+        Comunica ao jogo que pretende verificar se existe espaço disponível para a movimentação da peça.
+        Envia a resposta do jogo para o stub via middleware, em formato de objeto.
 
-        :param piece:
-        :return:
+        :param piece: [[]]
+        :return: returns nothing
+        :rtype: None
         """
         valid_space = self._server.valid_space(piece)
         self.send_obj(valid_space)
 
-    def clear_rows(self, grid):
+    def clear_rows(self, grid: [[]]) -> None:
         """
+        Comunica ao jogo que pretende verificar se existe espaço disponível para a movimentação da peça.
+        Envia a resposta do jogo para o stub via middleware, em formato de inteiro.
 
-        :param grid:
-        :return:
+        :param grid: [[]]
+        :return: returns nothing
+        :rtype None
         """
         rows_cleared = self._server.clear_rows(grid)
         self.send_int(rows_cleared, 2)
 
-    def convert_shape_format(self, current_piece):
+    def convert_shape_format(self, current_piece: Piece) -> None:
         """
+        Comunica ao jogo que pretende converter o formato da forma da peça escolhida
+        para o desenho da mesma em posições na grelha do tabuleiro.
+        Envia a resposta do jogo para o stub via middleware, em formato de objeto.
 
         :param current_piece:
-        :return:
+        :return: returns nothing
+        :rtype: None
         """
         shape = self._server.convert_shape_format(current_piece)
         self.send_obj(shape)
 
     def check_lost(self):
         """
+        Comunica ao jogo que pretende verificar se o jogar já perdeu ou ainda continua a jogar.
+        Envia a resposta do jogo para o stub via middleware, em formato de inteiro.
 
-        :return:
+        :return: returns nothing
+        :rtype: None
         """
         lost = self._server.check_lost()
         self.send_int(lost, 2)
@@ -124,7 +114,9 @@ class TetrisServer(Socket):
     def run(self) -> None:
         """
 
-        :return:
+
+        :return: returns nothing
+        :rtype: None
         """
         current_socket = socket.socket()
         current_socket.bind(('', self._port))
@@ -144,17 +136,18 @@ class TetrisServer(Socket):
 
     def dispatch_request(self) -> (bool, bool):
         """
+        Recebe o tipo de pedido feito pelo cliente e envia para o servidor,
+        de modo a receber resposta indicada para enviar de volta para o cliente.
+        Retorna dois booleanos para saber se é o último pedido e
+        se é para continuar a correr ou fechar o socket
 
-        :return:
+        :return: 
+        :rtype: (bool, bool)
         """
         request_type = self.receive_str()
         last_request = False
         keep_running = True
-        if request_type == "left":
-            self.left()
-        elif request_type == "right":
-            self.right()
-        elif request_type == "shape":
+        if request_type == "shape":
             self.get_shape()
         elif request_type == "grid":
             self.create_grid()

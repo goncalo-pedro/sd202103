@@ -1,38 +1,39 @@
 class Tabuleiro:
     """
-
+        Tabuleiro é composto pelas posições ocupadas e pela grelha total do mesmo
     """
 
     def __init__(self):
         """
-
+            Constrói um objeto "Tabuleiro" que representa o tabuleiro para as peças
         """
         self._locked_positions = {}
-        self._shapes = []
         self._grid = [[(0, 0, 0) for x in range(10)] for x in range(20)]
 
     @property
-    def locked_positions(self):
+    def locked_positions(self) -> {}:
         """
+        Retorna o map de posições preenchidas
 
-        :return:
+        :return: {}
         """
         return self._locked_positions
 
     @locked_positions.setter
-    def locked_positions(self, locked_positions):
+    def locked_positions(self, locked_positions: {}) -> None:
         """
+        Altera o valor das posições preenchidas com as novas posições
 
         :param locked_positions:
-        :return:
+        :return: returns nothing
         """
-        print(locked_positions)
         self._locked_positions = locked_positions
 
-    def create_grid(self):
+    def create_grid(self) -> [[]]:
         """
+        Retorna a grelha do tabuleiro com as devidas posições preenchidas
 
-        :return:
+        :return: [[]]
         """
         grid = [[(0, 0, 0) for x in range(10)] for x in range(20)]
 
@@ -42,13 +43,15 @@ class Tabuleiro:
                     c = self._locked_positions[(j, i)]
                     grid[i][j] = c
         self._grid = grid
+
         return grid
 
-    def clear_rows(self, grid):
+    def clear_rows(self, grid: [[]]) -> int:
         """
+        Calcula a quantidade de rows que são limpas e retorna esse valor para o utilizador acumular os pontos
 
-        :param grid:
-        :return:
+        :param grid: [[]]
+        :return: int
         """
         # need to see if row is clear the shift every other row above down one
         inc = 0
@@ -73,11 +76,12 @@ class Tabuleiro:
 
         return inc
 
-    def valid_space(self, shape):
+    def valid_space(self, shape: [[]]) -> bool:
         """
+        Verifica se existe espaço disponível para encaixar a peça para onde foi feito o movimento.
 
-        :param shape:
-        :return:
+        :param shape: [[]]
+        :return: bool
         """
         accepted_positions = [[(j, i) for j in range(10) if self._grid[i][j] == (0, 0, 0)] for i in range(20)]
         accepted_positions = [j for sub in accepted_positions for j in sub]
@@ -90,11 +94,12 @@ class Tabuleiro:
         return True
 
     @staticmethod
-    def convert_shape_format(shape):
+    def convert_shape_format(shape: [[]]) -> []:
         """
+        Converte o formato da forma da peça escolhida para o desenho da mesma em posições na grelha do tabuleiro.
 
-        :param shape:
-        :return:
+        :param shape: [[]]
+        :return: []
         """
         positions = []
         format_shape = shape.shape[shape.rotation % len(shape.shape)]
