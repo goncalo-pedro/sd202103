@@ -13,16 +13,18 @@ class Socket:
     @property
     def current_connection(self):
         """
-        :return: retorna conexão atual
+        :return: Conexão atual
         """
         return self._current_connection
 
     @current_connection.setter
     def current_connection(self, value):
         """
-        altera o valor de value para conectar
+        Adiciona uma nova connection para a camada de comunicação
+
         :param value: int
-        :return: None
+        :return: returns nothing
+        :rtype: None
         """
         self._current_connection = value
 
@@ -41,22 +43,28 @@ class Socket:
 
     def receive_int(self, n_bytes: int) -> int:
         """
-        :param n_bytes: The number of bytes to read from the current connection
-        :return: The next integer read from the current connection
+        :param n_bytes: O número de bytes para ler da conexão corrente
+
+        :return: O próximo inteiro lido da conexão corrente
+        :rtype: int
         """
         data = self._current_connection.recv(n_bytes)
         return int.from_bytes(data, byteorder='big', signed=True)
 
     def send_int(self, value: int, n_bytes: int) -> None:
         """
-        :param value: The integer value to be sent to the current connection
-        :param n_bytes: The number of bytes to send
+        :param value: O valor inteiro a ser enviado para a conexão corrente
+        :param n_bytes: O número de bytes a serem enviados
+
+        :return: returns nothings
+        :rtype: None
         """
         self._current_connection.send(value.to_bytes(n_bytes, byteorder='big', signed=True))
 
     def receive_str(self) -> str:
         """
-        :return: The next string read from the current connection
+        :return: A próxima string lida da conexão corrente
+        :rtype: str
         """
         n_bytes: int = self.receive_int(sockets.INT_SIZE)
         received: bytes = self._current_connection.recv(n_bytes)
@@ -64,25 +72,30 @@ class Socket:
 
     def send_str(self, value: str) -> None:
         """
-        :param value: The string value to send to the current connection
+        :param value: O valor da string a ser enviada para a conexão corrente
+
+        :return: returns nothings
+        :rtype: None
         """
         to_send: bytes = value.encode()
         self.send_int(len(to_send), sockets.INT_SIZE)
         self._current_connection.send(to_send)
 
-    def send_obj(self, obj):
+    def send_obj(self, obj) -> None:
         """
 
-        :param obj: the object value to send to the current connection
-        :return:
+        :param obj: O objeto a ser enviado para a conexão corrente
+        :return: returns nothings
+        :rtype: None
         """
         data: bytes = pickle.dumps(obj)
         self.send_int(len(data), sockets.INT_SIZE)
         self._current_connection.send(data)
 
-    def receive_obj(self):
+    def receive_obj(self) -> None:
         """
-        :return: The object to read from the current connection
+        :return: O objeto a ser lido da conexão corrente
+        :rtype: None
         """
         n_bytes: int = self.receive_int(sockets.INT_SIZE)
         received: bytes = self._current_connection.recv(n_bytes)

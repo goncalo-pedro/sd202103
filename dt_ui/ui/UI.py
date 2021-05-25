@@ -278,7 +278,7 @@ class UI:
 
         Método utilizado para desenhar a janela principal do jogo.
 
-        :param grid:[[]]
+        :param grid: [[]]
         :return: returns nothing
         :rtype: None
 
@@ -321,7 +321,7 @@ class UI:
 
     def run(self):
         """
-
+        Onde o UI é desenhado e os diferentes pedidos para o servidor são feitos.
         :return: returns nothing
         """
 
@@ -333,7 +333,6 @@ class UI:
         clock = pygame.time.Clock()
         fall_time = 0
         fall_speed = 0.27
-        score = 0
 
         while run:
             grid = self._game.create_grid()
