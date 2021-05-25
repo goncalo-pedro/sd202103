@@ -29,37 +29,41 @@ class TetrisServer(Socket):
         Envia a resposta do jogo para o stub via middleware, em formato de objeto.
 
         :return: returns nothing
+        :rtype: None
         """
         shape = self._server.get_shape()
         self.send_obj(shape)
 
-    def create_grid(self):
+    def create_grid(self) -> None:
         """
         Comunica ao jogo que pretende obter o formato da grelha do jogo
         com as devidas posições ocupadas.
         Envia a resposta do jogo para o stub via middleware, em formato de objeto.
 
         :return: returns nothing
+        :rtype: None
         """
         grid = self._server.create_grid()
         self.send_obj(grid)
 
-    def get_locked_positions(self):
+    def get_locked_positions(self) -> None:
         """
         Comunica ao jogo que pretende obter o map de posições ocupadas.
         Envia a resposta do jogo para o stub via middleware, em formato de objeto.
 
         :return: returns nothing
+        :rtype: None
         """
         locked_positions = self._server.get_locked_positions()
         self.send_obj(locked_positions)
 
-    def set_locked_positions(self, locked_positions: {}):
+    def set_locked_positions(self, locked_positions: {}) -> None:
         """
         Comunica ao jogo que pretende alterar as posições ocupadas pelas peças.
 
-        :param locked_positions:
+        :param locked_positions: {}
         :return: returns nothings
+        :rtype: None
         """
         self._server.set_locked_positions(locked_positions)
 
@@ -93,7 +97,7 @@ class TetrisServer(Socket):
         para o desenho da mesma em posições na grelha do tabuleiro.
         Envia a resposta do jogo para o stub via middleware, em formato de objeto.
 
-        :param current_piece:
+        :param current_piece: Piece
         :return: returns nothing
         :rtype: None
         """
@@ -113,7 +117,8 @@ class TetrisServer(Socket):
 
     def run(self) -> None:
         """
-
+        Abre o socket para que o cliente comece a sua comunicação,
+        fazendo pedidos para as devidas respostas.
 
         :return: returns nothing
         :rtype: None
@@ -141,7 +146,7 @@ class TetrisServer(Socket):
         Retorna dois booleanos para saber se é o último pedido e
         se é para continuar a correr ou fechar o socket
 
-        :return: 
+        :return: Continuação da execução e do último pedido
         :rtype: (bool, bool)
         """
         request_type = self.receive_str()

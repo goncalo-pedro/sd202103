@@ -23,7 +23,8 @@ class Piece(object):
         """
         Retorna a posição x da peça
 
-        :return:
+        :return: posição x
+        :rtype: int
         """
         return self._x
 
@@ -32,7 +33,8 @@ class Piece(object):
         """
         Retorna a posição y da peça
 
-        :return: int
+        :return: posição y
+        :rtype: int
         """
         return self._y
 
@@ -41,7 +43,8 @@ class Piece(object):
         """
         Retorna o formato da peça
 
-        :return: [[]]
+        :return: formato da peça
+        :rtype: [[]]
         """
         return self._shape
 
@@ -50,7 +53,8 @@ class Piece(object):
         """
         Retorna a cor da peça
 
-        :return: tuple
+        :return: color da peça rgb
+        :rtype: tuple
         """
         return self._color
 
@@ -61,6 +65,7 @@ class Piece(object):
 
         :param value:
         :return: returns nothing
+        :rtype: None
         """
         self._y = value
 
@@ -71,5 +76,6 @@ class Piece(object):
 
         :param value:
         :return: returns nothing
+        :rtype: None
         """
         self._x = value

@@ -15,7 +15,8 @@ class Tabuleiro:
         """
         Retorna o map de posições preenchidas
 
-        :return: {}
+        :return: Posições preenchidas
+        :rtype: {}
         """
         return self._locked_positions
 
@@ -26,6 +27,7 @@ class Tabuleiro:
 
         :param locked_positions:
         :return: returns nothing
+        :rtype: None
         """
         self._locked_positions = locked_positions
 
@@ -33,7 +35,8 @@ class Tabuleiro:
         """
         Retorna a grelha do tabuleiro com as devidas posições preenchidas
 
-        :return: [[]]
+        :return: Grelha do tabuleiro
+        :rtype: [[]]
         """
         grid = [[(0, 0, 0) for x in range(10)] for x in range(20)]
 
@@ -51,7 +54,8 @@ class Tabuleiro:
         Calcula a quantidade de rows que são limpas e retorna esse valor para o utilizador acumular os pontos
 
         :param grid: [[]]
-        :return: int
+        :return: Linhas eliminadas
+        :rtype: int
         """
         # need to see if row is clear the shift every other row above down one
         inc = 0
@@ -81,7 +85,8 @@ class Tabuleiro:
         Verifica se existe espaço disponível para encaixar a peça para onde foi feito o movimento.
 
         :param shape: [[]]
-        :return: bool
+        :return: Espaço disponível
+        :rtype: bool
         """
         accepted_positions = [[(j, i) for j in range(10) if self._grid[i][j] == (0, 0, 0)] for i in range(20)]
         accepted_positions = [j for sub in accepted_positions for j in sub]
@@ -99,7 +104,8 @@ class Tabuleiro:
         Converte o formato da forma da peça escolhida para o desenho da mesma em posições na grelha do tabuleiro.
 
         :param shape: [[]]
-        :return: []
+        :return: Posições do formato peça
+        :rtype: []
         """
         positions = []
         format_shape = shape.shape[shape.rotation % len(shape.shape)]
