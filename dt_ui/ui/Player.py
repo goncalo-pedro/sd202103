@@ -8,8 +8,8 @@ class Player:
     def __init__(self, name, game: TetrisGame):
         """
 
-        :param name: str
-        :param game: object
+        :param name: Nome do jogador a jogar
+        :param game: Jogo ativo
 
         """
         self._game = game
@@ -52,7 +52,7 @@ class Player:
     def points(self, points) -> None:
         """
 
-        :param points: int
+        :param points: Inteiro dos pontos atuais do jogador
         :return: int
         """
         self._points += points
