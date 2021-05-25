@@ -2,13 +2,12 @@ import pygame as pg
 
 
 class Button(object):
-    '''
+    """
     Exemplo aquirido do GitHub, utilizado para representar o botão "JOGAR" que permite ao jogador dar inicio à partida.
-
-    '''
+    """
 
     def __init__(self, rect, command, **kwargs):
-        '''
+        """
         Optional kwargs and their defaults:
             "color"             : pg.Color('red'),
             "text"              : None,
@@ -34,7 +33,7 @@ class Button(object):
             self.hovered = False
             self.hover_text = None
             self.clicked_text = None
-        '''
+        """
         self.rect = pg.Rect(rect)
         self.command = command
         self.clicked = False
@@ -82,11 +81,11 @@ class Button(object):
             self.text = self.font.render(self.text, True, self.font_color)
 
     def get_event(self, event):
-        ''' Call this on your event loop
+        """ Call this on your event loop
 
             for event in pg.event.get():
                 Button.get_event(event)
-        '''
+        """
         if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
             self.on_click(event)
         elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
@@ -115,9 +114,9 @@ class Button(object):
             self.hovered = False
 
     def draw(self, surface):
-        '''
+        """
         Call once on your main game loop
-        '''
+        """
         color = self.color
         text = self.text
         border = self.border_color

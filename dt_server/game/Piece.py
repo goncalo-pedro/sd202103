@@ -7,10 +7,14 @@ class Piece(object):
         """
         Constrói um objeto "Piece" representa uma peça
 
-        :param column: int
-        :param row: int
-        :param shape: [[]]
-        :param color: tuple
+        :param column: Posição Inicial da peça no eixo do x
+        :type column: int
+        :param row: Posição Inicial da peça no eixo do y
+        :type row: int
+        :param shape: Matriz do formato da peça
+        :type shape: [[]]
+        :param color: Tuplo que representa a cor em rgb(r,g,b)
+        :type color: tuple
         """
         self._x = column
         self._y = row
@@ -63,7 +67,9 @@ class Piece(object):
         """
         Altera a posição y da peça
 
-        :param value:
+        :param value: Novo valor da posição da peça no eixo do y
+        :type value: int
+
         :return: returns nothing
         :rtype: None
         """
@@ -74,7 +80,9 @@ class Piece(object):
         """
         Altera a posição x da peça
 
-        :param value:
+        :param value: Novo valor da posição da peça no eixo do x
+        :type value: int
+
         :return: returns nothing
         :rtype: None
         """

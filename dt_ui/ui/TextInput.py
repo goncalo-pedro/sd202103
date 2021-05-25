@@ -3,11 +3,9 @@ import string
 
 
 class TextBox(object):
-    '''
-
+    """
     Exemplo adquirido do GitHub para criar a caixa de introdução de texto para que o jogador possa inserir o seu nome.
-
-    '''
+    """
 
     def __init__(self, rect, **kwargs):
         self.rect = pg.Rect(rect)
@@ -44,11 +42,11 @@ class TextBox(object):
         self.__dict__.update(defaults)
 
     def get_event(self, event, mouse_pos=None):
-        ''' Call this on your event loop
+        """ Call this on your event loop
 
             for event in pg.event.get():
                 TextBox.get_event(event)
-        '''
+        """
         if event.type == pg.KEYDOWN and self.active:
             if event.key in (pg.K_RETURN, pg.K_KP_ENTER):
                 self.execute()
@@ -75,9 +73,9 @@ class TextBox(object):
             self.blink_timer = pg.time.get_ticks()
 
     def update(self):
-        '''
+        """
         Call once on your main game loop
-        '''
+        """
         new = "".join(self.buffer)
         if new != self.final:
             self.final = new
@@ -97,14 +95,13 @@ class TextBox(object):
         if pg.time.get_ticks() - self.delete_timer > self.delete_speed:
             self.delete_timer = pg.time.get_ticks()
             keys = pg.key.get_pressed()
-            if keys[pg.K_BACKSPACE]:
-                if self.buffer:
-                    self.buffer.pop()
+            if keys[pg.K_BACKSPACE] and self.buffer:
+                self.buffer.pop()
 
     def draw(self, surface):
-        '''
+        """
         Call once on your main game loop
-        '''
+        """
         outline_color = self.active_color if self.active else self.outline_color
         outline = self.rect.inflate(self.outline_width * 2, self.outline_width * 2)
         surface.fill(outline_color, outline)

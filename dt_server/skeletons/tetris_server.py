@@ -1,6 +1,5 @@
 import socket
 
-from game import Piece
 from sockets.sockets_mod import Socket
 from game.Jogo import Jogo
 
@@ -61,7 +60,9 @@ class TetrisServer(Socket):
         """
         Comunica ao jogo que pretende alterar as posições ocupadas pelas peças.
 
-        :param locked_positions: {}
+        :param locked_positions: Map com as posições preenchidas pelas peças
+        :type locked_positions: {}
+
         :return: returns nothings
         :rtype: None
         """
@@ -72,32 +73,38 @@ class TetrisServer(Socket):
         Comunica ao jogo que pretende verificar se existe espaço disponível para a movimentação da peça.
         Envia a resposta do jogo para o stub via middleware, em formato de objeto.
 
-        :param piece: [[]]
+        :param piece: Matriz que representa o formato da peça
+        :type piece: [[]]
+
         :return: returns nothing
         :rtype: None
         """
         valid_space = self._server.valid_space(piece)
-        self.send_obj(valid_space)
+        self.send_int(valid_space, 2)
 
     def clear_rows(self, grid: [[]]) -> None:
         """
         Comunica ao jogo que pretende verificar se existe espaço disponível para a movimentação da peça.
         Envia a resposta do jogo para o stub via middleware, em formato de inteiro.
 
-        :param grid: [[]]
+        :param grid: Matriz que representa a grelha do tabuleiro, onde as pessoas se encontram
+        :type grid: [[]]
+
         :return: returns nothing
         :rtype None
         """
         rows_cleared = self._server.clear_rows(grid)
         self.send_int(rows_cleared, 2)
 
-    def convert_shape_format(self, current_piece: Piece) -> None:
+    def convert_shape_format(self, current_piece: object) -> None:
         """
         Comunica ao jogo que pretende converter o formato da forma da peça escolhida
         para o desenho da mesma em posições na grelha do tabuleiro.
         Envia a resposta do jogo para o stub via middleware, em formato de objeto.
 
-        :param current_piece: Piece
+        :param current_piece: Matriz que representa o formato da peça
+        :type current_piece: object
+
         :return: returns nothing
         :rtype: None
         """
@@ -172,5 +179,3 @@ class TetrisServer(Socket):
             last_request = True
             keep_running = False
         return keep_running, last_request
-
-

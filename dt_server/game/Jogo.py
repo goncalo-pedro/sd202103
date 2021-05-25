@@ -12,9 +12,12 @@ class Jogo:
         """
         Costrói um objeto "Jogo"
 
-        :param tabuleiro: Tabuleiro
-        :param pecas: []
-        return: returns nothing
+        :param tabuleiro: Objeto que representa o Tabuleiro associado ao Jogo
+        :type tabuleiro: Tabuleiro
+        :param pecas: Lista de peças disponíveis no Jogo
+        :type pecas: []
+
+        :return: returns nothing
         """
         self._tabuleiro = tabuleiro
         self._pecas = pecas
@@ -33,7 +36,9 @@ class Jogo:
         """
         Altera o valor das posições preenchidas com as novas posições
 
-        :param locked_positions: {}
+        :param locked_positions: Map com as posições preenchidas pelas peças
+        :type locked_positions: {}
+
         :return: returns nothing
         :rtype: None
         """
@@ -61,7 +66,9 @@ class Jogo:
         """
         Calcula a quantidade de rows que são limpas e retorna esse valor para o utilizador acumular os pontos
 
-        :param grid: [[]]
+        :param grid: Matriz que representa a grelha do tabuleiro, onde as pessoas se encontram
+        :type grid: [[]]
+
         :return: Número de linhas eliminadas
         :rtype: int
         """
@@ -71,7 +78,9 @@ class Jogo:
         """
         Verifica se existe espaço disponível para encaixar a peça.
 
-        :param shape: [[]]
+        :param shape: Matriz que representa o formato da peça
+        :type shape: [[]]
+
         :return: Espaço disponível
         :rtype: bool
         """
@@ -81,7 +90,9 @@ class Jogo:
         """
         Converte o formato da forma da peça escolhida para o desenho da mesma em posições na grelha do tabuleiro.
 
-        :param shape: [[]]
+        :param shape: Matriz que representa o formato da peça
+        :type shape: [[]]
+
         :return: Posições do formato da peça
         :rtype: []
         """
