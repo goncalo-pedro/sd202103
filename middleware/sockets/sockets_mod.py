@@ -6,19 +6,13 @@ import sockets
 
 
 class Socket:
-    """
-
-    """
     def __init__(self):
-        """
-        Construtor
-        """
+
         self._current_connection = None
 
     @property
     def current_connection(self):
         """
-
         :return: retorna conexão atual
         """
         return self._current_connection
