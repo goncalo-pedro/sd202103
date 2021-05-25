@@ -16,6 +16,7 @@ class Tabuleiro:
         """
 
         :return:
+
         """
         return self._locked_positions
 
