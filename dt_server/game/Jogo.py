@@ -23,7 +23,8 @@ class Jogo:
         """
         Escolhe uma peça aleatória apartir da lista de peças e retorna a mesma.
 
-        :return: {Piece}
+        :return: Peça escolhida aleatoriamente
+        :rtype: Piece
         """
         peca = random.choice(self._pecas)
         return Piece(5, 0, peca.shape, peca.color)
@@ -34,6 +35,7 @@ class Jogo:
 
         :param locked_positions: {}
         :return: returns nothing
+        :rtype: None
         """
         self._tabuleiro.locked_positions = locked_positions
 
@@ -41,7 +43,8 @@ class Jogo:
         """
         Retorna o map de posições preenchidas
 
-        :return: map
+        :return: Posições preenchidas
+        :rtype: {}
         """
         return self._tabuleiro.locked_positions
 
@@ -49,25 +52,28 @@ class Jogo:
         """
         Cria e retorna a grid do tabuleiro
 
-        :return: []
+        :return: Grelha do tabuleiro
+        :rtype: [[]]
         """
         return self._tabuleiro.create_grid()
 
-    def clear_rows(self, grid: []) -> int:
+    def clear_rows(self, grid: [[]]) -> int:
         """
         Calcula a quantidade de rows que são limpas e retorna esse valor para o utilizador acumular os pontos
 
-        :param grid: []
-        :return: int
+        :param grid: [[]]
+        :return: Número de linhas eliminadas
+        :rtype: int
         """
         return self._tabuleiro.clear_rows(grid)
 
-    def valid_space(self, shape) -> bool:
+    def valid_space(self, shape: [[]]) -> bool:
         """
         Verifica se existe espaço disponível para encaixar a peça.
 
-        :param shape:
-        :return:
+        :param shape: [[]]
+        :return: Espaço disponível
+        :rtype: bool
         """
         return self._tabuleiro.valid_space(shape)
 
@@ -76,7 +82,8 @@ class Jogo:
         Converte o formato da forma da peça escolhida para o desenho da mesma em posições na grelha do tabuleiro.
 
         :param shape: [[]]
-        :return:
+        :return: Posições do formato da peça
+        :rtype: []
         """
         return self._tabuleiro.convert_shape_format(shape)
 
@@ -85,7 +92,8 @@ class Jogo:
         Verifica se as peças já ultrapassam o limite do tabuleiro,
         se sim então perdeu, caso contrário ainda não perdeu
 
-        :return: bool
+        :return: Perdeu o jogo
+        :rtype: bool
         """
         for pos in self._tabuleiro.locked_positions:
             x, y = pos
