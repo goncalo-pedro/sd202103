@@ -193,6 +193,8 @@ class UI:
     def draw_text_middle(self, text: str, size: int, color: tuple) -> None:
         """
 
+        Método utilizado para escrever texto num sítio do ecrã previamente definido
+
         :param text: string
         :param size: int
         :param color: tuple
@@ -209,6 +211,8 @@ class UI:
     def draw_grid(self, row: int, col: int) -> None:
         """
 
+        Método utilizado para desenhar a "grelha" do tabuleiro, representando os espaços que cada bloco poderá preencher
+
         :param row: int
         :param col: int
         :return: returns nothing
@@ -224,6 +228,8 @@ class UI:
 
     def update_score(self) -> None:
         """
+
+        Método utilizado para mostrar e atualizar o score (e nome) do jogador. É invocado quando este completa uma linha.
 
         :return: returns nothing
 
@@ -243,6 +249,8 @@ class UI:
 
     def draw_next_shape(self, shape) -> None:
         """
+
+        Método utilizado para mostrar no lado direito do jogo qual a próxima peça a ser gerada.
 
         :param shape: [][]
 
@@ -268,6 +276,8 @@ class UI:
     def draw_window(self, grid: [[]]) -> None:
         """
 
+        Método utilizado para desenhar a janela principal do jogo.
+
         :param grid:[[]]
         :return: returns nothing
         :rtype: None
@@ -277,8 +287,8 @@ class UI:
 
         # Tetris Title
 
-        font = pygame.font.SysFont('comicsans', 60)
-        label = font.render('TETRIS', 1, (255, 255, 255))
+        font = pygame.font.SysFont('comicsans', 45)
+        label = font.render('DISTRIBUTED TETRIS', 1, (255, 255, 255))
 
         self.window.blit(label, (self.top_left_x + 150 + play_width / 2 - (label.get_width() / 2), 30))
 
@@ -292,6 +302,8 @@ class UI:
 
     def draw_title(self, text: str, size: int, color: tuple):
         """
+
+        Método utilizado para desenhar o título "DISTRIBUTED TETRIS" no ecrã de jogo.
 
         :param text: str
         :param size: int
@@ -310,7 +322,7 @@ class UI:
     def run(self):
         """
 
-        :return:
+        :return: returns nothing
         """
 
         change_piece = False
