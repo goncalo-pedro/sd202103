@@ -7,26 +7,28 @@ from sockets.sockets_mod import Socket
 class TetrisGame:
 
     """
-
-    Classe representativa do Stub do Cliente para possibilitar a camada de comunicação com o skeleton (através do middleware)
-
+    Classe representativa do Stub do Cliente para possibilitar
+    a camada de comunicação com o skeleton (através do middleware)
     """
 
     def __init__(self, host: str, port: int) -> None:
         """
+        Constrói um objeto "TetrisGame"
 
-        :param host: str
-        :param port: int
+        :param host: address da conexão
+        :type host: str
+        :param port: port a ser conectada
+        :type port: int
         """
         super().__init__()
         self._current_connection = Socket.create_client_socket(host, port)
 
-
-
     def get_shape(self) -> [[]]:
         """
-        A pedido do cliente, comunica com o stub que pretende obter o formato da peça para desenhar a mesma em posições na grelha.
-        Envia o pedido para o skeleton via middleware, e devolve para o cliente a resposta recebida em formato de objeto.
+        A pedido do cliente, comunica com o stub que pretende obter o
+        formato da peça para desenhar a mesma em posições na grelha.
+        Envia o pedido para o skeleton via middleware, e devolve para o
+        cliente a resposta recebida em formato de objeto.
 
         :return: formato da peça em 2D
         :rtype: [[]]
@@ -38,9 +40,9 @@ class TetrisGame:
 
     def create_grid(self) -> [[]]:
         """
-
         A pedido do cliente, comunica com o stub que pretende obter a grid de jogo.
-        Envia o pedido para o skeleton via middleware, e devolve para o cliente a resposta recebida em formato de objeto.
+        Envia o pedido para o skeleton via middleware, e devolve para o cliente
+        a resposta recebida em formato de objeto.
 
         :return: grelha de fundo do tabuleiro
         :rtype: [[]]
@@ -53,8 +55,10 @@ class TetrisGame:
 
     def get_locked_positions(self) -> {}:
         """
-        A pedido do cliente, comunica com o stub que pretende obter o mapa contendo as "locked_positions" que representam as peças assentes no jogo.
-        Envia o pedido para o skeleton via middleware, e devolve para o cliente a resposta recebida em formato de objeto.
+        A pedido do cliente, comunica com o stub que pretende obter o
+        mapa contendo as "locked_positions" que representam as peças assentes no jogo.
+        Envia o pedido para o skeleton via middleware, e devolve para o
+        cliente a resposta recebida em formato de objeto.
 
 
         :return: mapa das posições preenchidas
@@ -66,13 +70,15 @@ class TetrisGame:
         self._current_connection.send_str("getlocked")
         return self._current_connection.receive_obj()
 
-    def set_locked_positions(self, locked_positions : {}) -> None:
+    def set_locked_positions(self, locked_positions: {}) -> None:
         """
+        A pedido do cliente, comunica com o stub de modo a atualizar
+        o mapa de "locked_positions2 que representam as peças assentes no jogo.
+        Envia o pedido para o skeleton via middleware,
+        e devolve para o cliente a resposta recebida em formato de objeto.
 
-        A pedido do cliente, comunica com o stub de modo a atualizar o mapa de "locked_positions2 que representam as peças assentes no jogo.
-        Envia o pedido para o skeleton via middleware, e devolve para o cliente a resposta recebida em formato de objeto.
-
-        :param locked_positions: {}
+        :param locked_positions: dicionário contendo as posições já ocupadas por peças
+        :type locked_positions: {}
         :return: returns nothing
         """
         if self._current_connection is None:
@@ -80,24 +86,36 @@ class TetrisGame:
         self._current_connection.send_str("setlocked")
         self._current_connection.send_obj(locked_positions)
 
-    def valid_space(self, piece: Piece) -> {}:
+    def valid_space(self, piece: Piece) -> int:
         """
+        A pedido do cliente, comunica com o stub que pretende obter
+        a disponibilidade de espaço para a movimentação da peça.
+        Envia o pedido para o skeleton via middleware, e devolve para o cliente
+        a resposta recebida em formato de inteiro.
 
-        :param piece: object
-        :return: retorna o mapa contendo as posiçoes livre nos tabuleiro
-        :rtype: {}
+        :param piece: Peça atual a ser jogada
+        :type piece: Piece
+
+        :return: Espaço disponível
+        :rtype: int
         """
         if self._current_connection is None:
             self.connect()
         self._current_connection.send_str("valid")
         self._current_connection.send_obj(piece)
-        return self._current_connection.receive_obj()
+        return self._current_connection.receive_int(2)
 
     def clear_rows(self, grid: [[]]) -> int:
         """
+        A pedido do cliente, comunica com o stub que pretende obter
+        o numero de linhas eliminadas ao tê-las completo.
+        Envia o pedido para o skeleton via middleware, e devolve para o cliente
+        a resposta recebida em formato de inteiro.
 
-        :param grid: [[]]
-        :return: retorna a quantidade de linhas que foram eliminadas
+        :param grid: Matriz que representa a grelha do tabuleiro
+        :type grid: [[]]
+
+        :return: Quantidade de linhas que foram eliminadas
         :rtype: int
 
         """
@@ -107,12 +125,18 @@ class TetrisGame:
         self._current_connection.send_obj(grid)
         return self._current_connection.receive_int(10)
 
-    def convert_shape_format(self, current_piece: Piece) -> Piece:
+    def convert_shape_format(self, current_piece: Piece):
         """
+        A pedido do cliente, comunica com o stub que pretende obter
+        o novo formato depois do pedido de rotação da peça.
+        Envia o pedido para o skeleton via middleware, e devolve para o cliente
+        a resposta recebida em formato de objeto.
 
-        :param current_piece: Piece
-        :return: retorna um novo formato para a peça depois de rodada
-        :rtype: Piece
+        :param current_piece: Peça atual que está sendo jogada
+        :type current_piece: Piece
+
+        :return: Novo formato para a peça depois de rodada
+        :rtype: []
         """
         if self._current_connection is None:
             self.connect()
@@ -122,7 +146,12 @@ class TetrisGame:
 
     def check_lost(self) -> int:
         """
-        :return: retorna um inteiro relativo ao caso de o jogador ter perdido (1) ou (0) no caso de ainda nao ter perdido
+        A pedido do cliente, comunica com o stub que pretende obter
+        a resposta de se o jogo foi perdido.
+        Envia o pedido para o skeleton via middleware, e devolve para o cliente
+        a resposta recebida em formato de inteiro.
+
+        :return: Inteiro relativo ao caso de o jogador ter perdido (1) ou (0) no caso de ainda nao ter perdido
         :rtype: int
         """
         if self._current_connection is None:
@@ -130,13 +159,9 @@ class TetrisGame:
         self._current_connection.send_str("lost")
         return self._current_connection.receive_int(10)
 
-
     def connect(self) -> None:
         """
-
         :return: returns nothing
+        :rtype: None
         """
         self._current_connection = socket.socket()
-
-
-

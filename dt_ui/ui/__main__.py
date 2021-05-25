@@ -7,21 +7,9 @@ from ui.UI import UI
 from ui.Player import Player
 import pygame
 
-"""
-10 x 20 square grid
-shapes: S, Z, I, O, J, L, T
-represented in order by 0 - 6
-"""
-
 done = False
 
-play_width = 300  # ou seja, 300 // 10 = 30 width por bloco
-play_height = 600  # ou seja, 600 // 20 = 20 height por bloco
-# screen resolution
-
 pygame.font.init()
-
-# VARIÁVEIS GLOBAIS
 
 widgets = []
 
@@ -31,20 +19,18 @@ entry_settings = {
 }
 
 
-def textbox_callback(id, final) -> None:
+def textbox_callback(final) -> None:
     """
 
-    :param id: id do objeto textbox
     :param final: texto do objeto textbox
     :return: returns nothing
     """
     print('enter pressed, textbox contains {}'.format(final))
 
 
-def alternative_callback(id, final) -> None:
+def alternative_callback(final) -> None:
     """
 
-    :param id: id do objeto textbox
     :param final: texto do objeto textbox
     :return: returns nothing
     """
@@ -64,16 +50,14 @@ def button_callback() -> None:
 
 def main_menu():
     """
-
-    Main da parte do cliente, corre o UI.
-
-
+    Main da parte do cliente, corre constroi a janela de visualização
+    e corre o UI para a comunicação com o servidor.
     """
 
     game = TetrisGame(ui.SERVER_ADDRESS, stubs.PORT)  # STUB
     # see all settings help(pygooey.TextBox.__init__)
 
-    ui_game = UI(pygame.display.set_mode((800, 700)), (800 - play_width) // 2, 700 - play_height, game)
+    ui_game = UI(pygame.display.set_mode((800, 700)), (800 - ui.play_width) // 2, 700 - ui.play_height, game)
 
     global done
 

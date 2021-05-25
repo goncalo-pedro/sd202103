@@ -1,7 +1,6 @@
 import pickle
 from socket import socket, timeout
 from typing import Union
-
 import sockets
 
 
@@ -113,11 +112,11 @@ class Socket:
             self._current_connection.close()
 
     @staticmethod
-    def create_server_socket(port: int, timeout: int = None) -> 'Socket':
+    def create_server_socket(port: int, time_out: int = None) -> 'Socket':
         new_socket: socket = socket()
         new_socket.bind(('', port))
         new_socket.listen(1)
-        new_socket.settimeout(timeout)
+        new_socket.settimeout(time_out)
 
         socket_middleware = Socket()
         socket_middleware.current_connection = new_socket

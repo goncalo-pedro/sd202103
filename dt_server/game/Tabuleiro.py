@@ -8,7 +8,7 @@ class Tabuleiro:
             Constrói um objeto "Tabuleiro" que representa o tabuleiro para as peças
         """
         self._locked_positions = {}
-        self._grid = [[(0, 0, 0) for x in range(10)] for x in range(20)]
+        self._grid = [[(0, 0, 0) for _ in range(10)] for _ in range(20)]
 
     @property
     def locked_positions(self) -> {}:
@@ -25,7 +25,9 @@ class Tabuleiro:
         """
         Altera o valor das posições preenchidas com as novas posições
 
-        :param locked_positions:
+        :param locked_positions: Map com as posições preenchidas pelas peças
+        :type locked_positions: {}
+
         :return: returns nothing
         :rtype: None
         """
@@ -38,7 +40,7 @@ class Tabuleiro:
         :return: Grelha do tabuleiro
         :rtype: [[]]
         """
-        grid = [[(0, 0, 0) for x in range(10)] for x in range(20)]
+        grid = [[(0, 0, 0) for _ in range(10)] for _ in range(20)]
 
         for i in range(len(grid)):
             for j in range(len(grid[i])):
@@ -53,12 +55,16 @@ class Tabuleiro:
         """
         Calcula a quantidade de rows que são limpas e retorna esse valor para o utilizador acumular os pontos
 
-        :param grid: [[]]
+        :param grid: Matriz que representa a grelha do tabuleiro, onde as pessoas se encontram
+        :type grid: [[]]
+
         :return: Linhas eliminadas
         :rtype: int
         """
         # need to see if row is clear the shift every other row above down one
         inc = 0
+        ind = 0
+
         self._grid = grid
         for i in range(len(self._grid) - 1, -1, -1):
             row = self._grid[i]
@@ -70,9 +76,11 @@ class Tabuleiro:
                     try:
                         del self._locked_positions[(j, i)]
                     except:
-                        continue
+                        print()
+                        raise
+
         if inc > 0:
-            for key in sorted(list(self._locked_positions), key=lambda x: x[1])[::-1]:
+            for key in sorted(list(self._locked_positions), key=lambda z: z[1])[::-1]:
                 x, y = key
                 if y < ind:
                     new_key = (x, y + inc)
@@ -84,7 +92,9 @@ class Tabuleiro:
         """
         Verifica se existe espaço disponível para encaixar a peça para onde foi feito o movimento.
 
-        :param shape: [[]]
+        :param shape: Matriz que representa o formato da peça
+        :type shape: [[]]
+
         :return: Espaço disponível
         :rtype: bool
         """
@@ -103,7 +113,9 @@ class Tabuleiro:
         """
         Converte o formato da forma da peça escolhida para o desenho da mesma em posições na grelha do tabuleiro.
 
-        :param shape: [[]]
+        :param shape: Matriz que representa o formato da peça
+        :type shape: [[]]
+
         :return: Posições do formato peça
         :rtype: []
         """
