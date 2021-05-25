@@ -4,8 +4,11 @@ import pygame
 # from Piece import Piece
 # from Tabuleiro import Tabuleiro
 
-play_width = 300  # meaning 300 // 10 = 30 width per block
-play_height = 600  # meaning 600 // 20 = 20 height per blo ck
+play_width = 300  # ou seja, 300 // 10 = 30 width por bloco
+play_height = 600  # ou seja, 600 // 20 = 20 height por bloco
+
+
+# Conjunto de peças disponiveis no jogo e suas transformações
 
 I = [['..0..',
       '..0..',
@@ -61,9 +64,6 @@ L = [['.....',
       '.....']]
 
 
-# adicionando restantes tipos de peças
-
-
 S = [['.....',
       '.....',
       '..00.',
@@ -116,15 +116,19 @@ T = [['.....',
 
 class UI:
     """
+    Classe que representa todos os aspetos da UI
 
     """
-    def __init__(self, window, top_left_x, top_left_y, game):
+    def __init__(self, window: object, top_left_x: int, top_left_y: int, game: object):
         """
 
         :param window:
         :param top_left_x:
         :param top_left_y:
-        :param game:
+        :param game: object
+        :return: returns nothing
+        :rtype None
+
         """
         self._player = None
         self._window = window
@@ -135,62 +139,66 @@ class UI:
         self._game = game
 
     @property
-    def window(self):
+    def window(self) -> object:
         """
 
-        :return:
+        :return: Object
+
         """
         return self._window
 
     @property
-    def top_left_x(self):
+    def top_left_x(self) -> int:
         """
 
-        :return:
-        """
-        return self._top_left_y
-
-    @property
-    def top_left_y(self):
-        """
-
-        :return:
+        :return: int
         """
         return self._top_left_y
 
     @property
-    def player(self):
+    def top_left_y(self) -> int:
         """
 
-        :return:
+        :return: int
+        """
+        return self._top_left_y
+
+    @property
+    def player(self) -> object:
+        """
+
+        :return: Object
         """
         return self._player
 
     @player.setter
-    def player(self, player):
+    def player(self, player) -> None:
         """
 
-        :param player:
-        :return:
+        :param player: Object
+        :return: Object
         """
-        print("dwqdqwdqwd")
         print(player)
         self._player = player
 
-    def fill(self):
+    def fill(self) -> None:
         """
 
-        :return:
+        :return: None
+
         """
         self.window.fill((0, 0, 0))
 
-    def draw_text_middle(self, text, size, color):
+
+    def draw_text_middle(self, text: str, size: int, color: tuple) -> None:
         """
 
-        :param text:
-        :param size:
-        :param color:
-        :return:
+        Método utilizado para escrever texto num sítio do ecrã previamente definido
+
+        :param text: string
+        :param size: int
+        :param color: tuple
+        :return: returns nothing
         """
 
         font = pygame.font.SysFont('comicsans', size, bold=True)
@@ -200,12 +208,14 @@ class UI:
             self.top_left_x + 150 + play_width / 2 - (label.get_width() / 2),
             self.top_left_y + play_height / 2 - label.get_height() / 2))
 
-    def draw_grid(self, row, col):
+    def draw_grid(self, row: int, col: int) -> None:
         """
 
-        :param row:
-        :param col:
-        :return:
+        Método utilizado para desenhar a "grelha" do tabuleiro, representando os espaços que cada bloco poderá preencher
+
+        :param row: int
+        :param col: int
+        :return: returns nothing
         """
         sx = self.top_left_x + 150
         sy = self.top_left_y
@@ -216,10 +226,13 @@ class UI:
                 pygame.draw.line(self.window, (0, 128, 128), (sx + j * 30, sy),
                                  (sx + j * 30, sy + play_height))  # vertical lines
 
-    def update_score(self):
+    def update_score(self) -> None:
         """
 
-        :return:
+        Método utilizado para mostrar e atualizar o score (e nome) do jogador. É invocado quando este completa uma linha.
+
+        :return: returns nothing
+
         """
         font = pygame.font.SysFont('comicsans', 30)
         font2 = pygame.font.SysFont('comcsans', 20)
@@ -234,12 +247,17 @@ class UI:
         self.window.blit(label2, (sx + 10, sy - 40))
 
 
-    def draw_next_shape(self, shape):
+    def draw_next_shape(self, shape) -> None:
         """
 
-        :param shape:
-        :return:
+        Método utilizado para mostrar no lado direito do jogo qual a próxima peça a ser gerada.
+
+        :param shape: [][]
+
+        :return: returns nothing
+
         """
+
         font = pygame.font.SysFont('comicsans', 30)
         label = font.render('Next Shape', 1, (255, 255, 255))
 
@@ -255,16 +273,22 @@ class UI:
 
         self.window.blit(label, (sx + 10, sy - 30))
 
-    def draw_window(self, grid):
+    def draw_window(self, grid: [[]]) -> None:
         """
 
-        :param grid:
-        :return:
+        Método utilizado para desenhar a janela principal do jogo.
+
+        :param grid:[[]]
+        :return: returns nothing
+        :rtype: None
+
         """
         self.window.fill((0, 0, 0))
+
         # Tetris Title
-        font = pygame.font.SysFont('comicsans', 60)
-        label = font.render('TETRIS', 1, (255, 255, 255))
+
+        font = pygame.font.SysFont('comicsans', 45)
+        label = font.render('DISTRIBUTED TETRIS', 1, (255, 255, 255))
 
         self.window.blit(label, (self.top_left_x + 150 + play_width / 2 - (label.get_width() / 2), 30))
 
@@ -276,13 +300,17 @@ class UI:
         self.draw_grid(40, 10)
         pygame.draw.rect(self.window, (255, 0, 0), (self.top_left_x + 150, self.top_left_y, play_width, play_height), 5)
 
-    def draw_title(self, text, size, color):
+    def draw_title(self, text: str, size: int, color: tuple):
         """
 
-        :param text:
-        :param size:
-        :param color:
-        :return:
+        Método utilizado para desenhar o título "DISTRIBUTED TETRIS" no ecrã de jogo.
+
+        :param text: str
+        :param size: int
+        :param color: tuple
+        :return: returns nothing
+        :rtype: None
+
         """
         font = pygame.font.SysFont('comicsans', size, bold=True)
         label = font.render(text, 1, color)
@@ -294,7 +322,7 @@ class UI:
     def run(self):
         """
 
-        :return:
+        :return: returns nothing
         """
 
         change_piece = False

@@ -15,12 +15,13 @@ represented in order by 0 - 6
 
 done = False
 
-play_width = 300  # meaning 300 // 10 = 30 width per block
-play_height = 600  # meaning 600 // 20 = 20 height per blo ck
+play_width = 300  # ou seja, 300 // 10 = 30 width por bloco
+play_height = 600  # ou seja, 600 // 20 = 20 height por bloco
 # screen resolution
 
 pygame.font.init()
-# GLOBALS VARS
+
+# VARIÁVEIS GLOBAIS
 
 widgets = []
 
