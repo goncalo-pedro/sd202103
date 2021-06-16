@@ -1,6 +1,14 @@
 from game.Piece import Piece
+from game.Jogo import Jogo
 
+
+MAX_NUMBER_OF_CONCURRENT_CLIENTS = 2
 COMMAND_SIZE = 9
+INT_SIZE = 8
+ACCEPT_TIMEOUT = 1
+LIST_CLIENTS = "list cli"
+BYE_OP = "bye"
+STOP_SERVER_OP = "terminate"
 
 i = [['..0..',
       '..0..',
