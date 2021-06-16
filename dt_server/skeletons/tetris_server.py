@@ -5,7 +5,7 @@ import skeletons
 import sockets
 
 
-class MathServer:
+class TetrisServer:
     def __init__(self, port: int, jogo: game.Jogo) -> None:
         """
         Creates a client given the server server to use

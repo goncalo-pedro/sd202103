@@ -48,5 +48,5 @@ class SharedServerState:
         result = []
         with self._clients_lock:
             for client_socket in self._clients:
-                result.append(client_socket.peer_add)
+                result.append(client_socket.peer_addr)
         return result

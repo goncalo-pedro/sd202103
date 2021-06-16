@@ -33,8 +33,6 @@ class TetrisGame:
         :return: formato da peça em 2D
         :rtype: [[]]
         """
-        if self._current_connection is None:
-            self.connect()
         self._current_connection.send_str("shape")
         return self._current_connection.receive_obj()
 
@@ -48,8 +46,6 @@ class TetrisGame:
         :rtype: [[]]
 
         """
-        if self._current_connection is None:
-            self.connect()
         self._current_connection.send_str("grid")
         return self._current_connection.receive_obj()
 
@@ -65,8 +61,6 @@ class TetrisGame:
         :rtype: {}
 
         """
-        if self._current_connection is None:
-            self.connect()
         self._current_connection.send_str("getlocked")
         return self._current_connection.receive_obj()
 
@@ -81,8 +75,6 @@ class TetrisGame:
         :type locked_positions: {}
         :return: returns nothing
         """
-        if self._current_connection is None:
-            self.connect()
         self._current_connection.send_str("setlocked")
         self._current_connection.send_obj(locked_positions)
 
@@ -99,8 +91,6 @@ class TetrisGame:
         :return: Espaço disponível
         :rtype: int
         """
-        if self._current_connection is None:
-            self.connect()
         self._current_connection.send_str("valid")
         self._current_connection.send_obj(piece)
         return self._current_connection.receive_int(2)
@@ -119,8 +109,6 @@ class TetrisGame:
         :rtype: int
 
         """
-        if self._current_connection is None:
-            self.connect()
         self._current_connection.send_str("clear")
         self._current_connection.send_obj(grid)
         return self._current_connection.receive_int(10)
@@ -138,8 +126,6 @@ class TetrisGame:
         :return: Novo formato para a peça depois de rodada
         :rtype: []
         """
-        if self._current_connection is None:
-            self.connect()
         self._current_connection.send_str("convert")
         self._current_connection.send_obj(current_piece)
         return self._current_connection.receive_obj()
@@ -154,14 +140,5 @@ class TetrisGame:
         :return: Inteiro relativo ao caso de o jogador ter perdido (1) ou (0) no caso de ainda nao ter perdido
         :rtype: int
         """
-        if self._current_connection is None:
-            self.connect()
         self._current_connection.send_str("lost")
         return self._current_connection.receive_int(10)
-
-    def connect(self) -> None:
-        """
-        :return: returns nothing
-        :rtype: None
-        """
-        self._current_connection = socket.socket()

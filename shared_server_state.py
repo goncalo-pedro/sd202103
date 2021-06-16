@@ -1,19 +1,19 @@
 import threading
 from typing import Set, List
 
-import server
+import game
 import sockets
 
 
 class SharedServerState:
-    def __init__(self, math_server: server.MathServer, port: int):
+    def __init__(self, math_server: game.Jogo, port: int):
         self._clients: Set[sockets.Socket] = set()
         self._keep_running: bool = True
         self._port = port
-        self._math_server: server.MathServer = math_server
+        self._jogo: game.Jogo = math_server
         self._clients_lock = threading.Lock()
         self._running_lock = threading.Lock()
-        self._concurrent_clients = threading.Semaphore(server.MAX_NUMBER_OF_CONCURRENT_CLIENTS)
+        self._concurrent_clients = threading.Semaphore(game.MAX_NUMBER_OF_CONCURRENT_CLIENTS)
 
     def add_client(self, client_socket: sockets.Socket) -> None:
         with self._clients_lock:
@@ -37,8 +37,8 @@ class SharedServerState:
             return self._keep_running
 
     @property
-    def math_server(self) -> server.MathServer:
-        return self._math_server
+    def game(self) -> game.Jogo:
+        return self._jogo
 
     @property
     def concurrent_clients(self) -> threading.Semaphore:
@@ -48,5 +48,5 @@ class SharedServerState:
         result = []
         with self._clients_lock:
             for client_socket in self._clients:
-                result.append(client_socket.peer_addr)
+                result.append(client_socket.peer_add)
         return result

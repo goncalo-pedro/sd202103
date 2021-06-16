@@ -3,14 +3,14 @@ import logging
 from typing import Union
 
 import game
-import skeletons
 import sockets
+from shared_server_state import SharedServerState
 
 
 class ServerControlSession(Thread):
     """Session to control the server"""
 
-    def __init__(self, shared_state: skeletons.SharedServerState):
+    def __init__(self, shared_state: SharedServerState):
         """
         Constructs a thread to hold a session with the client that controls the server
 
@@ -37,11 +37,11 @@ class ServerControlSession(Thread):
     def _handle_control_client(self, control_socket: sockets.Socket):
         self._control_client_socket = control_socket.accept()
         if self._control_client_socket is not None:
-            logging.debug("CONTROL client " + str(self._control_client_socket.peer_add) + " just connected")
+            logging.debug("CONTROL client " + str(self._control_client_socket.peer_addr) + " just connected")
             last_request = False
             while not last_request:
                 last_request = self.dispatch_request()
-            logging.debug("CONTROL client " + str(self._control_client_socket.peer_add) + " disconnected")
+            logging.debug("CONTROL client " + str(self._control_client_socket.peer_addr) + " disconnected")
             self._control_client_socket.close()
 
     def dispatch_request(self) -> bool:

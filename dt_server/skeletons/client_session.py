@@ -130,11 +130,10 @@ class ClientSession(Thread):
 
         """Maintains a session with the client, following the established protocol"""
         with self._client_connection as client:
-            logging.debug("Client " + str(client.peer_addr) + " just connected")
+            print("Client " + str(client.peer_addr) + " just connected")
             last_request = False
             while not last_request:
                 last_request = self.dispatch_request()
-            logging.debug("Client " + str(client.peer_addr) + " disconnected")
             self._shared_state.remove_client(self._client_connection)
             self._shared_state.concurrent_clients.release()
 

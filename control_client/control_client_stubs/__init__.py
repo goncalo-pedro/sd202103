@@ -1,4 +1,4 @@
-from control_client_stubs.control_math_server import TetrisServer
+from control_client_stubs.control_tetris_server import TetrisServer
 
 INT_SIZE = 8
 BYE_OP = "bye"

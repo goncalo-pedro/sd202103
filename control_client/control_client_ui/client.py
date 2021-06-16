@@ -4,12 +4,12 @@ from control_client_stubs import TetrisServer
 
 
 class Client:
-    def __init__(self, math_server: TetrisServer) -> None:
+    def __init__(self, server: TetrisServer) -> None:
         """
         Creates a client given the control_client_stubs control_client_stubs to use
         :param math_server: The math control_client_stubs the client will use
         """
-        self._server = math_server
+        self._server = server
 
     def list_cli(self) -> None:
         """
