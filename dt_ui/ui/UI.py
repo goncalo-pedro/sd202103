@@ -31,7 +31,7 @@ class UI:
         self._game = game
 
     @property
-    def window(self) -> Union[pygame.surface, SurfaceType]:
+    def window(self):
         """
         Retorna o objecto associado à surface.
 
