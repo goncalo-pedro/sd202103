@@ -1,26 +1,23 @@
-import socket
+from threading import Thread
+import logging
 
-from sockets.sockets_mod import Socket
-from game.Jogo import Jogo
-
-import game
+import skeletons
+import sockets
 
 
-class TetrisServer(Socket):
-    """
-        TetrisServer é a classe responsável pela função de stub,
-        recebe e responde a pedidos feito pelo cliente
-    """
-    def __init__(self, port: int, jogo: game.Jogo):
+class ClientSession(Thread):
+    """Maintains a session with the client"""
+
+    def __init__(self, shared_state: skeletons.SharedServerState, client_socket: sockets.Socket):
         """
-            Constrói um objeto "TetrisServer"
+        Constructs a thread to hold a session with the client
 
-        :param port: int
-        :param jogo: Jogo
+        :param shared_state: The server's state shared by threads
+        :param client_socket: The client's socket
         """
-        super().__init__()
-        self._port = port
-        self._server = jogo
+        Thread.__init__(self)
+        self._shared_state = shared_state
+        self._client_connection = client_socket
 
     def get_shape(self) -> None:
         """
@@ -30,8 +27,8 @@ class TetrisServer(Socket):
         :return: returns nothing
         :rtype: None
         """
-        shape = self._server.get_shape()
-        self.send_obj(shape)
+        shape = self._shared_state.jogo.get_shape()
+        self._client_connection.send_obj(shape)
 
     def create_grid(self) -> None:
         """
@@ -42,8 +39,8 @@ class TetrisServer(Socket):
         :return: returns nothing
         :rtype: None
         """
-        grid = self._server.create_grid()
-        self.send_obj(grid)
+        grid = self._shared_state.jogo.create_grid()
+        self._client_connection.send_obj(grid)
 
     def get_locked_positions(self) -> None:
         """
@@ -53,8 +50,8 @@ class TetrisServer(Socket):
         :return: returns nothing
         :rtype: None
         """
-        locked_positions = self._server.get_locked_positions()
-        self.send_obj(locked_positions)
+        locked_positions = self._shared_state.jogo.get_locked_positions()
+        self._client_connection.send_obj(locked_positions)
 
     def set_locked_positions(self, locked_positions: {}) -> None:
         """
@@ -66,7 +63,7 @@ class TetrisServer(Socket):
         :return: returns nothings
         :rtype: None
         """
-        self._server.set_locked_positions(locked_positions)
+        self._shared_state.jogo.set_locked_positions(locked_positions)
 
     def valid_space(self, piece: [[]]) -> None:
         """
@@ -79,8 +76,8 @@ class TetrisServer(Socket):
         :return: returns nothing
         :rtype: None
         """
-        valid_space = self._server.valid_space(piece)
-        self.send_int(valid_space, 2)
+        valid_space = self._shared_state.jogo.valid_space(piece)
+        self._client_connection.send_int(valid_space, 2)
 
     def clear_rows(self, grid: [[]]) -> None:
         """
@@ -93,8 +90,8 @@ class TetrisServer(Socket):
         :return: returns nothing
         :rtype None
         """
-        rows_cleared = self._server.clear_rows(grid)
-        self.send_int(rows_cleared, 2)
+        rows_cleared = self._shared_state.jogo.clear_rows(grid)
+        self._client_connection.send_int(rows_cleared, 2)
 
     def convert_shape_format(self, current_piece: object) -> None:
         """
@@ -108,8 +105,8 @@ class TetrisServer(Socket):
         :return: returns nothing
         :rtype: None
         """
-        shape = self._server.convert_shape_format(current_piece)
-        self.send_obj(shape)
+        shape = self._shared_state.jogo.convert_shape_format(current_piece)
+        self._client_connection.send_obj(shape)
 
     def check_lost(self):
         """
@@ -119,8 +116,8 @@ class TetrisServer(Socket):
         :return: returns nothing
         :rtype: None
         """
-        lost = self._server.check_lost()
-        self.send_int(lost, 2)
+        lost = self._shared_state.jogo.check_lost()
+        self._client_connection.send_int(lost, 2)
 
     def run(self) -> None:
         """
@@ -130,21 +127,16 @@ class TetrisServer(Socket):
         :return: returns nothing
         :rtype: None
         """
-        current_socket = socket.socket()
-        current_socket.bind(('', self._port))
-        current_socket.listen(1)
 
-        keep_running = True
-        while keep_running:
-            self._current_connection, address = current_socket.accept()
-            print("Client ", address, " just connected!")
-            with self._current_connection:
-                last_request = False
-                while not last_request:
-                    keep_running, last_request = self.dispatch_request()
-                print("Client ", address, " disconnect ")
-        current_socket.close()
-        print("server stopped")
+        """Maintains a session with the client, following the established protocol"""
+        with self._client_connection as client:
+            logging.debug("Client " + str(client.peer_addr) + " just connected")
+            last_request = False
+            while not last_request:
+                last_request = self.dispatch_request()
+            logging.debug("Client " + str(client.peer_addr) + " disconnected")
+            self._shared_state.remove_client(self._client_connection)
+            self._shared_state.concurrent_clients.release()
 
     def dispatch_request(self) -> (bool, bool):
         """
@@ -156,7 +148,7 @@ class TetrisServer(Socket):
         :return: Continuação da execução e do último pedido
         :rtype: (bool, bool)
         """
-        request_type = self.receive_str()
+        request_type = self._client_connection.receive_str()
         last_request = False
         keep_running = True
         if request_type == "shape":
@@ -166,13 +158,13 @@ class TetrisServer(Socket):
         elif request_type == "getlocked":
             self.get_locked_positions()
         elif request_type == "setlocked":
-            self.set_locked_positions(self.receive_obj())
+            self.set_locked_positions(self._client_connection.receive_obj())
         elif request_type == "valid":
-            self.valid_space(self.receive_obj())
+            self.valid_space(self._client_connection.receive_obj())
         elif request_type == "clear":
-            self.clear_rows(self.receive_obj())
+            self.clear_rows(self._client_connection.receive_obj())
         elif request_type == "convert":
-            self.convert_shape_format(self.receive_obj())
+            self.convert_shape_format(self._client_connection.receive_obj())
         elif request_type == "lost":
             self.check_lost()
         elif request_type == "exit":
