@@ -1,6 +1,11 @@
 from game.Piece import Piece
+from game.Jogo import Jogo
 
 COMMAND_SIZE = 9
+PORT = 35000
+
+ACCEPT_TIMEOUT = 1
+MAX_NUMBER_OF_CONCURRENT_CLIENTS = 2
 
 i = [['..0..',
       '..0..',
