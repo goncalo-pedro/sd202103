@@ -331,7 +331,7 @@ class UI:
                 change_piece = False
 
                 score_plus = self._game.clear_rows(grid)
-                print("ola ", score_plus)
+
                 # if player cleared rows then add points to him
                 if score_plus:
                     players = self._game.add_points_to_player(self._player.name, score_plus)

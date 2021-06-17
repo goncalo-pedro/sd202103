@@ -1,5 +1,3 @@
-import socket
-
 from game import Piece
 from sockets.sockets_mod import Socket
 

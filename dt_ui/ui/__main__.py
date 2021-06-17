@@ -52,7 +52,7 @@ def button_callback() -> None:
     global done, name, game, ui_game
 
     if game.create_player(name):
-      done = True
+        done = True
     else:
         ui_game.draw_player_exists('Jogador já existe!', 40, (0, 255, 0))
 
@@ -90,18 +90,14 @@ def main_menu():
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.K_RETURN or event.type == pygame.QUIT:
-
-                if game.create_player(name):
-                    done = True
-                else:
-                    print("jogador ja existe!")
+                done = True
 
             for w in widgets:
                 w.get_event(event)
 
             name = ""
             for caracter in entry.buffer:
-              name += caracter
+                name += caracter
 
         for w in widgets:
             w.update()
