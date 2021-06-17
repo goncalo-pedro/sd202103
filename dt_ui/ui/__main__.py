@@ -17,6 +17,11 @@ entry_settings = {
     "inactive_on_enter": False,
     'active': False
 }
+game = TetrisGame(ui.SERVER_ADDRESS, stubs.PORT)
+
+ui_game = UI(pygame.display.set_mode((800, 700)), (800 - ui.play_width) // 2, 700 - ui.play_height, game)
+
+name = ""
 
 
 def textbox_callback(final) -> None:
@@ -43,9 +48,13 @@ def button_callback() -> None:
     :return: returns nothing
 
     """
+    global done, name, game, ui_game
 
-    global done
-    done = True
+    print(name)
+    if game.create_player(name):
+      done = True
+    else:
+        ui_game.draw_player_exists('Jogador já existe!', 40, (0, 255, 0))
 
 
 def main_menu():
@@ -54,12 +63,9 @@ def main_menu():
     e corre o UI para a comunicação com o servidor.
     """
 
-    game = TetrisGame(ui.SERVER_ADDRESS, stubs.PORT)  # STUB
+    global game, done, name, ui_game
+
     # see all settings help(pygooey.TextBox.__init__)
-
-    ui_game = UI(pygame.display.set_mode((800, 700)), (800 - ui.play_width) // 2, 700 - ui.play_height, game)
-
-    global done
 
     entry = TextBox(rect=(320, 450, 150, 30), command=textbox_callback, **entry_settings)
 
@@ -83,22 +89,38 @@ def main_menu():
 
     while not done:
         for event in pygame.event.get():
-            if event.type == pygame.K_RETURN or event.type == pygame.QUIT:
-                done = True
+            if (event.type == pygame.K_RETURN or event.type == pygame.QUIT):
+
+                if game.create_player(name):
+                    done = True
+                else:
+                    print("jogador ja existe!")
+
             for w in widgets:
                 w.get_event(event)
+
+            name = ""
+            for caracter in entry.buffer:
+              name += caracter
+
         for w in widgets:
             w.update()
             w.draw(ui_game.window)
         pygame.display.update()
 
+
+
     run = True
+
     while run:
+
         ui_game.fill()
         ui_game.draw_text_middle('Press any key to begin.', 60, (255, 255, 255))
         name = ""
         for caracter in entry.buffer:
             name += caracter
+
+        game.create_player(name)
         player = Player(name, game)
         ui_game.player = player
         pygame.display.update()
@@ -109,8 +131,10 @@ def main_menu():
 
             if event.type == pygame.KEYDOWN:
                 ui_game.run()
-    pygame.quit()
+                run = False
 
+
+    pygame.quit()
 
 pygame.display.set_caption('Tetris')
 

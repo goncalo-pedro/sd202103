@@ -1,6 +1,7 @@
 from ctypes import Union
 import pygame
-from pygame.surface import SurfaceType
+import time
+#from pygame.surface import SurfaceType
 from stubs.tetris_game import TetrisGame
 from ui import play_width, play_height
 from ui.Player import Player
@@ -106,6 +107,27 @@ class UI:
             self.top_left_x + 150 + play_width / 2 - (label.get_width() / 2),
             self.top_left_y + play_height / 2 - label.get_height() / 2))
 
+    def draw_player_exists(self, text: str, size: int, color: tuple) -> None:
+        """
+        Escreve texto num sítio do ecrã previamente definido
+
+        :param text: string de texto destinada a ser escrita no ecrã
+        :param size: inteiro referente ao tamanho de letra
+        :param color: tuplo referente à cor a utilizar (R,G,B)
+        :return: returns nothing
+        """
+
+        font = pygame.font.SysFont('comicsans', size, bold=True)
+        label = font.render(text, True, color)
+
+        self.window.blit(label, (
+            self.top_left_x + 150 + play_width / 2 - (label.get_width() / 2),
+            self.top_left_y + 125 + play_height / 2 - label.get_height() / 2))
+
+
+
+
+
     def draw_grid(self, row: int, col: int) -> None:
         """
         Desenha a "grelha" do tabuleiro, representando os espaços que cada bloco poderá preencher
@@ -126,23 +148,33 @@ class UI:
                 pygame.draw.line(self._window, (0, 128, 128), (sx + j * 30, sy),
                                  (sx + j * 30, sy + play_height))  # vertical lines
 
-    def update_score(self) -> None:
+    def update_score(self, jogadores) -> None:
         """
         Desenha e atualiza o score (e nome) do jogador. É invocado quando este completa uma linha.
 
         :return: returns nothing
         """
-        font = pygame.font.SysFont('comicsans', 30)
-        font2 = pygame.font.SysFont('comcsans', 20)
 
-        label = font.render(self._player.name, True, (255, 255, 255))
-        label2 = font2.render(str(self._player.points) + " points", True, (255, 255, 255))
+        i = 0
 
-        sx = self.top_left_x - 50
-        sy = self.top_left_y + play_height / 2 - 50
 
-        self.window.blit(label, (sx + 10, sy - 70))
-        self.window.blit(label2, (sx + 10, sy - 40))
+        for jogador in jogadores:
+
+
+
+            font = pygame.font.SysFont('comicsans', 30)
+            font2 = pygame.font.SysFont('comcsans', 20)
+
+            label = font.render(jogador, True, (255, 255, 255))
+            label2 = font2.render(str(jogadores[jogador]) + " points", True, (255, 255, 255))
+
+            sx = self.top_left_x - 50
+            sy = self.top_left_y + i + play_height / 2 - 50
+
+            self.window.blit(label, (sx + 10, sy - 70))
+            self.window.blit(label2, (sx + 10, sy - 40))
+
+            i += 50
 
     def draw_next_shape(self, shape: [[]]) -> None:
         """
@@ -236,8 +268,16 @@ class UI:
         clock = pygame.time.Clock()
         fall_time = 0
         fall_speed = 0.27
+        winner = ""
+
 
         while run:
+
+
+
+            jogadores = self._game.get_jogadores()
+            self.update_score(jogadores)
+
             grid = self._game.create_grid()
             locked_positions = self._game.get_locked_positions()
 
@@ -303,18 +343,27 @@ class UI:
                 print("ola ", score_plus)
                 # call four times to check for multiple clear rows
                 if score_plus:
-                    self._player.points = score_plus
-                    self.update_score()
+                    jogadores = self._game.add_points_to_player(self._player.name, score_plus)
+                    self.update_score(jogadores)
+
 
             self.draw_window(grid)
             self.draw_next_shape(next_piece)
-            self.update_score()
+
+            self.update_score(jogadores)
             pygame.display.update()
 
             # Check if user lost
             if self._game.check_lost():
+                winner = self._game.check_winner()
                 run = False
 
-        self.draw_text_middle("You Lost", 40, (255, 255, 255))
+        #self.draw_text_middle("You Lost", 40, (255, 255, 255))
+
+        self.draw_text_middle(winner + ' WINS', 60, (255, 255, 255))
+
         pygame.display.update()
-        pygame.time.delay(2000)
+
+
+        pygame.time.delay(1500)
+

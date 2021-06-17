@@ -21,6 +21,7 @@ class Jogo:
         """
         self._tabuleiro = tabuleiro
         self._pecas = pecas
+        self._jogadores = {}
 
     def get_shape(self) -> Piece:
         """
@@ -98,6 +99,38 @@ class Jogo:
         """
         return self._tabuleiro.convert_shape_format(shape)
 
+
+
+    def create_player(self, name: str) -> bool:
+        if name not in self._jogadores.keys():
+            self._jogadores[name] = 0
+            return True
+        return False
+
+    @property
+    def jogadores(self) -> {}:
+        return self._jogadores
+
+    def add_points_to_player(self, name, points):
+        self._jogadores[name] += points
+        return self._jogadores
+
+    def winner(self):
+        winner = 0
+        winner_name = ""
+        for jogador in self._jogadores:
+            if self._jogadores[jogador] > winner:
+                winner = self._jogadores[jogador]
+                winner_name = jogador
+            self._jogadores[jogador] = 0
+        return winner_name
+
+
+
+
+
+
+
     def check_lost(self) -> bool:
         """
         Verifica se as peças já ultrapassam o limite do tabuleiro,
@@ -106,9 +139,11 @@ class Jogo:
         :return: Perdeu o jogo
         :rtype: bool
         """
+
         for pos in self._tabuleiro.locked_positions:
             x, y = pos
             if y < 1:
+
                 self._tabuleiro.locked_positions = {}
                 return True
         return False

@@ -2,10 +2,8 @@ from game.Piece import Piece
 from game.Jogo import Jogo
 
 COMMAND_SIZE = 9
-LIST_CLIENTS = "list cli"
-BYE_OP = "bye"
-STOP_SERVER_OP = "terminate"
-INT_SIZE = 8
+PORT = 35000
+
 ACCEPT_TIMEOUT = 1
 MAX_NUMBER_OF_CONCURRENT_CLIENTS = 2
 

@@ -1,8 +1,9 @@
+import socket
 from threading import Thread
-import logging
+
+import sockets
 
 import skeletons
-import sockets
 
 
 class ClientSession(Thread):
@@ -119,25 +120,40 @@ class ClientSession(Thread):
         lost = self._shared_state.jogo.check_lost()
         self._client_connection.send_int(lost, 2)
 
-    def run(self) -> None:
-        """
-        Abre o socket para que o cliente comece a sua comunicação,
-        fazendo pedidos para as devidas respostas.
-
-        :return: returns nothing
-        :rtype: None
-        """
-
+    def run(self):
         """Maintains a session with the client, following the established protocol"""
         with self._client_connection as client:
-            print("Client " + str(client.peer_addr) + " just connected")
+            print("Client " + str(client.peer_add) + " just connected")
             last_request = False
             while not last_request:
                 last_request = self.dispatch_request()
+            print("Client " + str(client.peer_add) + " disconnected")
             self._shared_state.remove_client(self._client_connection)
             self._shared_state.concurrent_clients.release()
 
-    def dispatch_request(self) -> (bool, bool):
+
+    def create_player(self, name : str) -> None:
+        result = self._shared_state.jogo.create_player(name)
+        self._client_connection.send_int(result, 2)
+
+
+    def get_jogadores(self) -> None:
+        result = self._shared_state.jogo.jogadores
+        self._client_connection.send_obj(result)
+
+    def add_points_to_player(self, name, points):
+        result = self._shared_state.jogo.add_points_to_player(name, points)
+        self._client_connection.send_obj(result)
+
+    def check_winner(self):
+        winner = self._shared_state.jogo.winner()
+        self._client_connection.send_str(winner)
+
+
+
+
+
+    def dispatch_request(self) -> bool:
         """
         Recebe o tipo de pedido feito pelo cliente e envia para o servidor,
         de modo a receber resposta indicada para enviar de volta para o cliente.
@@ -149,7 +165,6 @@ class ClientSession(Thread):
         """
         request_type = self._client_connection.receive_str()
         last_request = False
-        keep_running = True
         if request_type == "shape":
             self.get_shape()
         elif request_type == "grid":
@@ -166,7 +181,14 @@ class ClientSession(Thread):
             self.convert_shape_format(self._client_connection.receive_obj())
         elif request_type == "lost":
             self.check_lost()
+        elif request_type == "create_player":
+            self.create_player(self._client_connection.receive_str())
+        elif request_type == "get_jogadores":
+            self.get_jogadores()
+        elif request_type == "add_points":
+            self.add_points_to_player(self._client_connection.receive_str(), self._client_connection.receive_int(8))
+        elif request_type == "check_winner":
+            self.check_winner()
         elif request_type == "exit":
             last_request = True
-            keep_running = False
-        return keep_running, last_request
+        return last_request

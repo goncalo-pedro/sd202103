@@ -1,38 +1,54 @@
-import game
-import logging
+import socket
 
-import skeletons
 import sockets
 
+import skeletons
+from sockets.sockets_mod import Socket
 
-class TetrisServer:
-    def __init__(self, port: int, jogo: game.Jogo) -> None:
+import game
+
+
+class TetrisServer(Socket):
+    """
+        TetrisServer é a classe responsável pela função de stub,
+        recebe e responde a pedidos feito pelo cliente
+    """
+    def __init__(self, port: int, jogo: game.Jogo):
         """
-        Creates a client given the server server to use
-        :param port: The math server port of the host the client will use
+            Constrói um objeto "TetrisServer"
+
+        :param port: int
+        :param jogo: Jogo
         """
         super().__init__()
+        self._port = port
+        self._server = jogo
         self._state = skeletons.SharedServerState(jogo, port)
 
     def run(self) -> None:
         """
-        Runs the server server until the client sends a "terminate" action
-        """
-        skeletons.ServerControlSession(self._state).start()
+        Abre o socket para que o cliente comece a sua comunicação,
+        fazendo pedidos para as devidas respostas.
 
+        :return: returns nothing
+        :rtype: None
+        """
+
+        """
+                Runs the server server until the client sends a "terminate" action
+                """
         with sockets.Socket.create_server_socket(self._state.port, game.ACCEPT_TIMEOUT) as server_socket:
-            logging.info("Waiting for clients to connect on port " + str(self._state.port))
+            print("Waiting for clients to connect on port " + str(self._state.port))
 
             while self._state.keep_running:
                 self._state.concurrent_clients.acquire()
                 client_socket = server_socket.accept()
                 if client_socket is not None:
                     self._state.add_client(client_socket)
-                    print('new client added')
                     skeletons.ClientSession(self._state, client_socket).start()
                 else:
                     self._state.concurrent_clients.release()
 
-            logging.info("Waiting for clients to terminate...")
+            print("Waiting for clients to terminate...")
 
-        logging.info("Server stopped")
+        print("Server stopped")

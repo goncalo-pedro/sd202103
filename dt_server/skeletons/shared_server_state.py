@@ -1,8 +1,9 @@
 import threading
 from typing import Set, List
 
-import game
 import sockets
+
+import game
 
 
 class SharedServerState:
@@ -48,5 +49,5 @@ class SharedServerState:
         result = []
         with self._clients_lock:
             for client_socket in self._clients:
-                result.append(client_socket.peer_addr)
+                result.append(client_socket.peer_add)
         return result

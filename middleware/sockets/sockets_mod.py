@@ -5,38 +5,65 @@ import sockets
 
 
 class Socket:
-    def __init__(self, connection: socket):
-        self._current_connection: socket = connection
+    def __init__(self):
+
+        self._current_connection = None
+
+    @property
+    def current_connection(self):
+        """
+        :return: Conexão atual
+        """
+        return self._current_connection
+
+    @current_connection.setter
+    def current_connection(self, value):
+        """
+        Adiciona uma nova connection para a camada de comunicação
+
+        :param value: int
+        :return: returns nothing
+        :rtype: None
+        """
+        self._current_connection = value
 
     def accept(self) -> Union['Socket', None]:
         try:
             client_connection, _ = self._current_connection.accept()
-            return Socket(client_connection)
+            new_socket = Socket()
+            new_socket.current_connection = client_connection
+            return new_socket
         except timeout:
             return None
 
     @property
-    def peer_addr(self):
+    def peer_add(self):
         return self._current_connection.getpeername()
 
     def receive_int(self, n_bytes: int) -> int:
         """
-        :param n_bytes: The number of bytes to read from the current connection
-        :return: The next integer read from the current connection
+        :param n_bytes: O número de bytes para ler da conexão corrente
+
+        :return: O próximo inteiro lido da conexão corrente
+        :rtype: int
         """
         data = self._current_connection.recv(n_bytes)
         return int.from_bytes(data, byteorder='big', signed=True)
 
     def send_int(self, value: int, n_bytes: int) -> None:
         """
-        :param value: The integer value to be sent to the current connection
-        :param n_bytes: The number of bytes to send
+        :param value: O valor inteiro a ser enviado para a conexão corrente
+        :param n_bytes: O número de bytes a serem enviados
+
+        :return: returns nothings
+        :rtype: None
         """
-        self._current_connection.send(value.to_bytes(n_bytes, byteorder="big", signed=True))
+        self._current_connection.send(value.to_bytes(n_bytes, byteorder='big', signed=True))
 
     def receive_str(self) -> str:
         """
-        :return: The next string read from the current connection
+        :return: A próxima string lida da conexão corrente
+        :rtype: str
         """
         n_bytes: int = self.receive_int(sockets.INT_SIZE)
         received: bytes = self._current_connection.recv(n_bytes)
@@ -44,7 +71,10 @@ class Socket:
 
     def send_str(self, value: str) -> None:
         """
-        :param value: The string value to send to the current connection
+        :param value: O valor da string a ser enviada para a conexão corrente
+
+        :return: returns nothings
+        :rtype: None
         """
         to_send: bytes = value.encode()
         self.send_int(len(to_send), sockets.INT_SIZE)
@@ -71,9 +101,10 @@ class Socket:
         return pickle.loads(received)
 
     def __enter__(self):
+
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type, exc_value, exc_tb):
         self.close()
 
     def close(self):
@@ -81,15 +112,21 @@ class Socket:
             self._current_connection.close()
 
     @staticmethod
-    def create_server_socket(port: int, timeout: int = None) -> 'Socket':
+    def create_server_socket(port: int, time_out: int = None) -> 'Socket':
         new_socket: socket = socket()
         new_socket.bind(('', port))
         new_socket.listen(1)
-        new_socket.settimeout(timeout)
-        return Socket(new_socket)
+        new_socket.settimeout(time_out)
+
+        socket_middleware = Socket()
+        socket_middleware.current_connection = new_socket
+        return socket_middleware
 
     @staticmethod
     def create_client_socket(host: str, port: int) -> 'Socket':
         new_socket: socket = socket()
         new_socket.connect((host, port))
-        return Socket(new_socket)
+
+        socket_middleware = Socket()
+        socket_middleware.current_connection = new_socket
+        return socket_middleware
