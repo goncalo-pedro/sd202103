@@ -5,7 +5,6 @@ import sockets
 
 import game
 
-
 class SharedServerState:
     def __init__(self, jogo: game.Jogo, port: int):
         self._clients: Set[sockets.Socket] = set()

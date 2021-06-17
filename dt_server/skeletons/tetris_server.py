@@ -1,5 +1,3 @@
-import socket
-
 import sockets
 
 import skeletons
@@ -21,8 +19,6 @@ class TetrisServer(Socket):
         :param jogo: Jogo
         """
         super().__init__()
-        self._port = port
-        self._server = jogo
         self._state = skeletons.SharedServerState(jogo, port)
 
     def run(self) -> None:

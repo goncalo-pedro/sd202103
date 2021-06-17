@@ -1,7 +1,5 @@
 from ctypes import Union
 import pygame
-import time
-#from pygame.surface import SurfaceType
 from stubs.tetris_game import TetrisGame
 from ui import play_width, play_height
 from ui.Player import Player
@@ -124,10 +122,6 @@ class UI:
             self.top_left_x + 150 + play_width / 2 - (label.get_width() / 2),
             self.top_left_y + 125 + play_height / 2 - label.get_height() / 2))
 
-
-
-
-
     def draw_grid(self, row: int, col: int) -> None:
         """
         Desenha a "grelha" do tabuleiro, representando os espaços que cada bloco poderá preencher
@@ -157,11 +151,7 @@ class UI:
 
         i = 0
 
-
         for jogador in jogadores:
-
-
-
             font = pygame.font.SysFont('comicsans', 30)
             font2 = pygame.font.SysFont('comcsans', 20)
 
@@ -268,15 +258,15 @@ class UI:
         clock = pygame.time.Clock()
         fall_time = 0
         fall_speed = 0.27
-        winner = ""
 
+        game_finished = False
 
         while run:
 
-
-
-            jogadores = self._game.get_jogadores()
-            self.update_score(jogadores)
+            players = self._game.get_jogadores()
+            if len(players) == 1:
+                game_finished = True
+            self.update_score(players)
 
             grid = self._game.create_grid()
             locked_positions = self._game.get_locked_positions()
@@ -284,7 +274,7 @@ class UI:
             fall_time += clock.get_rawtime()
             clock.tick()
 
-            # PIECE FALLING CODE
+            # piece falling speed
             if fall_time / 1000 >= fall_speed:
                 fall_time = 0
                 current_piece.y += 1
@@ -294,17 +284,18 @@ class UI:
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    # quit the game
                     run = False
-                    pygame.display.quit()
-                    quit()
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
+                        # move shape to left
                         current_piece.x -= 1
                         if not self._game.valid_space(current_piece):
                             current_piece.x += 1
 
                     elif event.key == pygame.K_RIGHT:
+                        # move shape to right
                         current_piece.x += 1
                         if not self._game.valid_space(current_piece):
                             current_piece.x -= 1
@@ -329,7 +320,7 @@ class UI:
                 if y > -1:
                     grid[y][x] = current_piece.color
 
-            # IF PIECE HIT GROUND
+            # if piece hit ground
             if change_piece:
                 for pos in shape_pos:
                     p = (pos[0], pos[1])
@@ -341,29 +332,32 @@ class UI:
 
                 score_plus = self._game.clear_rows(grid)
                 print("ola ", score_plus)
-                # call four times to check for multiple clear rows
+                # if player cleared rows then add points to him
                 if score_plus:
-                    jogadores = self._game.add_points_to_player(self._player.name, score_plus)
-                    self.update_score(jogadores)
-
+                    players = self._game.add_points_to_player(self._player.name, score_plus)
+                    self.update_score(players)
 
             self.draw_window(grid)
             self.draw_next_shape(next_piece)
 
-            self.update_score(jogadores)
+            self.update_score(players)
             pygame.display.update()
 
             # Check if user lost
             if self._game.check_lost():
                 winner = self._game.check_winner()
+                self.fill()
+                if winner == "":
+                    self.draw_text_middle('DRAW!', 60, (255, 255, 255))
+                else:
+                    self.draw_text_middle(winner + ' WINS!', 60, (255, 255, 255))
                 run = False
 
-        #self.draw_text_middle("You Lost", 40, (255, 255, 255))
-
-        self.draw_text_middle(winner + ' WINS', 60, (255, 255, 255))
+            # check if game finished because is just 1 player left
+            if game_finished:
+                self.fill()
+                self.draw_text_middle('You Won! Another Player quit the game.', 40, (255, 255, 255))
+                run = False
 
         pygame.display.update()
-
-
-        pygame.time.delay(1500)
-
+        pygame.time.delay(2000)

@@ -120,6 +120,73 @@ class ClientSession(Thread):
         lost = self._shared_state.jogo.check_lost()
         self._client_connection.send_int(lost, 2)
 
+    def create_player(self, name: str) -> None:
+        """
+        Comunica ao jogo que pretende verificar o nome do jogador e caso não exista esse nome,
+        então cria o jogador e infroma.
+        Envia a resposta do jogo para o stub via middleware, em formato de inteiro.
+
+        :param name: Nome que o jogador inseriu na caixa de texto
+        :type name: str
+
+        :return: returns nothings
+        :rtype: None
+        """
+        result = self._shared_state.jogo.create_player(name)
+        self._client_connection.send_int(result, 2)
+
+    def get_jogadores(self) -> None:
+        """
+        Comunica ao jogo que pretende verificar quantos jogadores estão a jogar de momento.
+        Envia a resposta do jogo para o stub via middleware, em formato de objeto.
+
+        :return: returns nothings
+        :rtype: None
+        """
+        result = self._shared_state.jogo.jogadores
+        self._client_connection.send_obj(result)
+
+    def add_points_to_player(self, name: str, points: int) -> None:
+        """
+        Comunica ao jogo que pretende adicionar pontos ao jogador que completou a linha.
+        Envia a resposta do jogo para o stub via middleware, em formato de objeto.
+
+        :param name: Nome que o jogador inseriu na caixa de texto
+        :type name: str
+
+        :param points: Quantidade de pontos, ou seja, linhas que o jogador completou
+        :type points: int
+
+        :return: returns nothing
+        :rtype: None
+        """
+        result = self._shared_state.jogo.add_points_to_player(name, points)
+        self._client_connection.send_obj(result)
+
+    def check_winner(self):
+        """
+        Comunica ao jogo que pretende verificar quem foi o vencedor da partida de tetris.
+        Envia a resposta do jogo para o stub via middleware, em formato de string o nome do jogador.
+
+        :return: returns nothing
+        :rtype: None
+        """
+        winner = self._shared_state.jogo.check_winner()
+        self._client_connection.send_str(winner)
+
+    def remove_player(self, name: str) -> None:
+        """
+        Comunica ao jogo que pretende remover o jogador, e irá ser removido do mapa de jogadores.
+        Envia a resposta do jogo para o stub via middleware, em formato de objeto.
+
+        :param name: Nome do jogador que irá ser removido
+        :type name: str
+
+        :return: returns nothing
+        :rtype: None
+        """
+        self._shared_state.jogo.remove_player(name)
+
     def run(self):
         """Maintains a session with the client, following the established protocol"""
         with self._client_connection as client:
@@ -130,28 +197,6 @@ class ClientSession(Thread):
             print("Client " + str(client.peer_add) + " disconnected")
             self._shared_state.remove_client(self._client_connection)
             self._shared_state.concurrent_clients.release()
-
-
-    def create_player(self, name : str) -> None:
-        result = self._shared_state.jogo.create_player(name)
-        self._client_connection.send_int(result, 2)
-
-
-    def get_jogadores(self) -> None:
-        result = self._shared_state.jogo.jogadores
-        self._client_connection.send_obj(result)
-
-    def add_points_to_player(self, name, points):
-        result = self._shared_state.jogo.add_points_to_player(name, points)
-        self._client_connection.send_obj(result)
-
-    def check_winner(self):
-        winner = self._shared_state.jogo.winner()
-        self._client_connection.send_str(winner)
-
-
-
-
 
     def dispatch_request(self) -> bool:
         """
@@ -189,6 +234,7 @@ class ClientSession(Thread):
             self.add_points_to_player(self._client_connection.receive_str(), self._client_connection.receive_int(8))
         elif request_type == "check_winner":
             self.check_winner()
-        elif request_type == "exit":
+        elif request_type == "quit_connection":
+            self.remove_player(self._client_connection.receive_str())
             last_request = True
         return last_request

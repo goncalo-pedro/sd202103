@@ -17,6 +17,7 @@ entry_settings = {
     "inactive_on_enter": False,
     'active': False
 }
+
 game = TetrisGame(ui.SERVER_ADDRESS, stubs.PORT)
 
 ui_game = UI(pygame.display.set_mode((800, 700)), (800 - ui.play_width) // 2, 700 - ui.play_height, game)
@@ -50,7 +51,6 @@ def button_callback() -> None:
     """
     global done, name, game, ui_game
 
-    print(name)
     if game.create_player(name):
       done = True
     else:
@@ -89,7 +89,7 @@ def main_menu():
 
     while not done:
         for event in pygame.event.get():
-            if (event.type == pygame.K_RETURN or event.type == pygame.QUIT):
+            if event.type == pygame.K_RETURN or event.type == pygame.QUIT:
 
                 if game.create_player(name):
                     done = True
@@ -108,17 +108,12 @@ def main_menu():
             w.draw(ui_game.window)
         pygame.display.update()
 
-
-
     run = True
 
     while run:
 
         ui_game.fill()
         ui_game.draw_text_middle('Press any key to begin.', 60, (255, 255, 255))
-        name = ""
-        for caracter in entry.buffer:
-            name += caracter
 
         game.create_player(name)
         player = Player(name, game)
@@ -133,8 +128,9 @@ def main_menu():
                 ui_game.run()
                 run = False
 
-
+    game.quit_connection(name)
     pygame.quit()
+
 
 pygame.display.set_caption('Tetris')
 

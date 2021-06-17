@@ -33,8 +33,6 @@ class TetrisGame:
         :return: formato da peça em 2D
         :rtype: [[]]
         """
-        if self._current_connection is None:
-            self.connect()
         self._current_connection.send_str("shape")
         return self._current_connection.receive_obj()
 
@@ -48,8 +46,6 @@ class TetrisGame:
         :rtype: [[]]
 
         """
-        if self._current_connection is None:
-            self.connect()
         self._current_connection.send_str("grid")
         return self._current_connection.receive_obj()
 
@@ -65,8 +61,6 @@ class TetrisGame:
         :rtype: {}
 
         """
-        if self._current_connection is None:
-            self.connect()
         self._current_connection.send_str("getlocked")
         return self._current_connection.receive_obj()
 
@@ -81,8 +75,6 @@ class TetrisGame:
         :type locked_positions: {}
         :return: returns nothing
         """
-        if self._current_connection is None:
-            self.connect()
         self._current_connection.send_str("setlocked")
         self._current_connection.send_obj(locked_positions)
 
@@ -99,8 +91,6 @@ class TetrisGame:
         :return: Espaço disponível
         :rtype: int
         """
-        if self._current_connection is None:
-            self.connect()
         self._current_connection.send_str("valid")
         self._current_connection.send_obj(piece)
         return self._current_connection.receive_int(2)
@@ -119,8 +109,6 @@ class TetrisGame:
         :rtype: int
 
         """
-        if self._current_connection is None:
-            self.connect()
         self._current_connection.send_str("clear")
         self._current_connection.send_obj(grid)
         return self._current_connection.receive_int(10)
@@ -138,31 +126,60 @@ class TetrisGame:
         :return: Novo formato para a peça depois de rodada
         :rtype: []
         """
-        if self._current_connection is None:
-            self.connect()
         self._current_connection.send_str("convert")
         self._current_connection.send_obj(current_piece)
         return self._current_connection.receive_obj()
 
+    def create_player(self, name: str) -> int:
+        """
+        A pedido do cliente, comunica que pretende verificar se o nome do jogador é válido,
+        ou seja, se está disponível para ser usado.
+        Envia o pedido para o skeleton via middleware, e devolve para o cliente
+        a resposta recebida em formato de inteiro.
 
+        :param name: Nome do jogador que foi inserido na caixa de texto
+        :type name: str
 
-    def create_player(self, name) -> int:
+        :return: Se o nome é válido ou não
+        :rtype: int
+        """
         self._current_connection.send_str("create_player")
         self._current_connection.send_str(name)
         return self._current_connection.receive_int(2)
 
-
     def get_jogadores(self) -> {}:
+        """
+        A pedido do cliente, comunica que pretende verificar quantos jogadores estão a jogar de momento.
+        Envia o pedido para o skeleton via middleware, e devolve para o cliente
+        a resposta recebida em formato de objeto.
+
+        :return: Retorna o mapa de jogadores que estão a jogar
+        :rtype: {}
+        """
         self._current_connection.send_str("get_jogadores")
         return self._current_connection.receive_obj()
 
-    def add_points_to_player(self, name, points):
+    def add_points_to_player(self, name: str, points: int) -> {}:
+        """
+        A pedido do cliente, comunica que pretende adicionar pontos a si mesmo,
+         visto que completou a linha.
+        Envia o pedido para o skeleton via middleware, e devolve para o cliente
+        a resposta recebida em formato de objeto.
+
+        :param name: Nome do jogador que irá ganhar os pontos
+        :type name: str
+
+        :param points: Quantidade de pontos que o jogador ganhou ao completar linhas
+        :type points: int
+
+        :return: Retorna o dicionário de jogadores atualizado
+        :rtype: {}
+        """
+
         self._current_connection.send_str("add_points")
         self._current_connection.send_str(name)
         self._current_connection.send_int(points, 8)
         return self._current_connection.receive_obj()
-
-
 
     def check_lost(self) -> int:
         """
@@ -174,18 +191,32 @@ class TetrisGame:
         :return: Inteiro relativo ao caso de o jogador ter perdido (1) ou (0) no caso de ainda nao ter perdido
         :rtype: int
         """
-        if self._current_connection is None:
-            self.connect()
         self._current_connection.send_str("lost")
         return self._current_connection.receive_int(10)
 
-    def connect(self) -> None:
+    def check_winner(self) -> str:
         """
+        A pedido do cliente, comunica com o stub que pretende verificar quem foi o vencedor da partida de tetris.
+        Envia o pedido para o skeleton via middleware, e devolve para o cliente
+        a resposta recebida em formato de string o nome do jogador.
+
+        :return: O nome do vencedor, caso seja string vazia então é um empate
+        :rtype: str
+        """
+        self._current_connection.send_str("check_winner")
+        return self._current_connection.receive_str()
+
+    def quit_connection(self, name: str) -> None:
+        """
+        A pedido do cliente, comunica com o stub que pretende abandonar o jogo,
+        e irá ser removido do mapa de jogadores, assim como desligar a sua conexão.
+        Envia o pedido para o skeleton via middleware.
+
+        :param name: Nome do jogador
+        :type name: str
+
         :return: returns nothing
         :rtype: None
         """
-        self._current_connection = socket.socket()
-
-    def check_winner(self):
-        self._current_connection.send_str("check_winner")
-        return self._current_connection.receive_str()
+        self._current_connection.send_str("quit_connection")
+        self._current_connection.send_str(name)

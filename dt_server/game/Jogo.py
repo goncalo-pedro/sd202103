@@ -99,37 +99,84 @@ class Jogo:
         """
         return self._tabuleiro.convert_shape_format(shape)
 
-
-
     def create_player(self, name: str) -> bool:
+        """
+        Verifica o nome do jogador que foi inserido na caixa de texto, se o nome não existir
+        nas chaves do mapa então é válido, cria o jogador e retorna True, caso contrário retorna False
+
+        :param name: Nome que o jogador inseriu na caixa de texto
+        :type name: str
+
+        :return: Se foi criado com sucesso o jogador.
+        :rtype: bool
+        """
         if name not in self._jogadores.keys():
             self._jogadores[name] = 0
             return True
         return False
 
+    def remove_player(self, name: str) -> None:
+        """
+        Remove o jogador com o respetivo nome do mapa.
+
+        :param name: Nome do jogador que irá ser removido
+        :type name: str
+
+        :return: returns nothing
+        :rtype: None
+        """
+        self._jogadores.pop(name)
+
     @property
     def jogadores(self) -> {}:
+        """
+        Retorna o mapa de jogadores a jogar.
+
+        :return: Os jogadores e os respetivos pontos
+        :rtype: {}
+        """
         return self._jogadores
 
-    def add_points_to_player(self, name, points):
+    def add_points_to_player(self, name: str, points: int) -> {}:
+        """
+        Incrementa os respetivos pontos ao jogador em questão
+
+        :param name: Nome do jogador para adicionar pontos
+        :type name: str
+
+        :param points: Os pontos que o jogador ganhou e vão ser incrementados
+        :type points: int
+
+        :return: Retorna os jogadores com os devidos pontos alterados para atualizar o UI.
+        :rtype: {}
+        """
         self._jogadores[name] += points
         return self._jogadores
 
-    def winner(self):
+    def check_winner(self) -> str:
+        """
+        Verifica quem foi o vencedor do jogo comparando os vários pontos de cada jogador.
+        Se tiverem os mesmos pontos vai ser retornado uma string vazia simbolizando um empate,
+        caso contrário é retornado o nome do jogador que ganhou
+
+        :return: Nome do jogador que ganhou
+        :rtype: str
+        """
         winner = 0
         winner_name = ""
+        winners_equals = []
         for jogador in self._jogadores:
             if self._jogadores[jogador] > winner:
                 winner = self._jogadores[jogador]
                 winner_name = jogador
+                winners_equals = [jogador]
+            elif self._jogadores[jogador] == winner:
+                winners_equals.append(jogador)
             self._jogadores[jogador] = 0
-        return winner_name
-
-
-
-
-
-
+        if len(winners_equals) >= 2:
+            return ""
+        else:
+            return winner_name
 
     def check_lost(self) -> bool:
         """
