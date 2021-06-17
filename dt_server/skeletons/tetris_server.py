@@ -28,6 +28,7 @@ class TetrisServer:
                 client_socket = server_socket.accept()
                 if client_socket is not None:
                     self._state.add_client(client_socket)
+                    print('new client added')
                     skeletons.ClientSession(self._state, client_socket).start()
                 else:
                     self._state.concurrent_clients.release()
